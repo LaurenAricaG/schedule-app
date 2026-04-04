@@ -6,6 +6,18 @@ import { prisma } from "@/lib/prisma";
 export const { handlers, auth, signIn, signOut } = NextAuth({
   secret: process.env.AUTH_SECRET,
 
+  cookies: {
+    sessionToken: {
+      name: "authjs.session-token",
+      options: {
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
+        secure: process.env.NODE_ENV === "production",
+      },
+    },
+  },
+
   providers: [
     Credentials({
       credentials: {
@@ -48,10 +60,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   callbacks: {
     jwt({ token, user }) {
       if (user) {
-        token.id = user.id;
-        token.username = user.username;
-        token.rol = user.rol;
-        token.rolId = user.rolId;
+        token.id = user.id ?? "";
+        token.username = user.username ?? "";
+        token.rol = user.rol ?? "";
+        token.rolId = user.rolId ?? 0;
       }
       return token;
     },

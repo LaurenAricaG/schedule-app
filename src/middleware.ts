@@ -1,13 +1,21 @@
-import { auth } from "@/lib/auth";
+// src/middleware.ts
+export const runtime = "nodejs";
+
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { getToken } from "next-auth/jwt";
 
-export default auth((req: NextRequest & { auth: any }) => {
+export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
-  const session = req.auth;
+
+  const token = await getToken({
+    req,
+    secret: process.env.AUTH_SECRET,
+    cookieName: "authjs.session-token",
+  });
 
   // no autenticado → login
-  if (!session) {
+  if (!token) {
     if (pathname === "/login") return NextResponse.next();
     return NextResponse.redirect(new URL("/login", req.url));
   }
@@ -17,7 +25,7 @@ export default auth((req: NextRequest & { auth: any }) => {
     return NextResponse.redirect(new URL("/", req.url));
   }
 
-  const rol = session.user.rol;
+  const rol = token.rol as string;
 
   // redirigir desde / según rol
   if (pathname === "/") {
@@ -27,19 +35,9 @@ export default auth((req: NextRequest & { auth: any }) => {
     return NextResponse.redirect(new URL("/panel", req.url));
   }
 
-  // no admin intenta entrar a /admin → su panel
-  if (pathname.startsWith("/admin") && rol !== "admin") {
-    return NextResponse.redirect(new URL("/panel", req.url));
-  }
-
-  // admin intenta entrar a /panel → panel admin
-  if (pathname.startsWith("/panel") && rol === "admin") {
-    return NextResponse.redirect(new URL("/admin", req.url));
-  }
-
   return NextResponse.next();
-});
+}
 
 export const config = {
-  matcher: ["/", "/login", "/admin/:path*", "/panel/:path*"],
+  matcher: ["/", "/login", "/panel/:path*", "/panel/:path*"],
 };
