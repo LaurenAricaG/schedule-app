@@ -1,0 +1,121 @@
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// Roles
+model Role {
+  id        Int     @id @default(autoincrement())
+  rol       String  @unique
+  users     User[]
+  createdAt DateTime @default(now())
+  deletedAt DateTime?
+}
+
+// Usuarios
+model User {
+  id        Int     @id @default(autoincrement())
+  name      String
+  lastname  String?
+  email     String  @unique
+  username  String  @unique
+  password  String
+  rolId     Int
+  rol       Role    @relation(fields: [rolId], references: [id])
+  courses   Course[]
+  createdAt DateTime @default(now())
+  deletedAt DateTime?
+  status    Boolean @default(true)
+
+  @@index([rolId])
+}
+
+// Cursos
+model Course {
+  id        Int      @id @default(autoincrement())
+  name      String
+  color     String?
+  teacher   String
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  tasks     Task[]
+  schedules Schedule[]
+  createdAt DateTime @default(now())
+  deletedAt DateTime?
+
+  @@index([userId])
+}
+
+// Tareas
+model Task {
+  id        Int       @id @default(autoincrement())
+  title     String
+  description String?
+  dueDate   DateTime
+  status    TaskStatus @default(PENDING)
+  courseId  Int
+  course    Course     @relation(fields: [courseId], references: [id])
+  reminders Reminder[]
+  createdAt DateTime @default(now())
+  deletedAt DateTime?
+
+  @@index([courseId])
+  @@index([status]) 
+}
+
+enum TaskStatus {
+  PENDING
+  COMPLETED
+}
+
+// Recordatorios
+model Reminder {
+  id        Int        @id @default(autoincrement())
+  taskId    Int
+  task      Task       @relation(fields: [taskId], references: [id])
+  type      ReminderType
+  remindAt  DateTime
+  sent      Boolean    @default(false)
+  createdAt DateTime   @default(now())
+  deletedAt DateTime?
+
+  @@index([taskId])     
+  @@index([remindAt])   
+  @@index([sent]) 
+}
+
+enum ReminderType {
+  EMAIL
+  SMS
+  WHATSAPP
+}
+
+// Horarios
+model Schedule {
+  id         Int      @id @default(autoincrement())
+  dayOfWeek  DayOfWeek
+  startTime  DateTime @db.Time
+  endTime    DateTime @db.Time
+  courseId   Int
+  course     Course   @relation(fields: [courseId], references: [id])
+  createdAt  DateTime @default(now())
+  deletedAt  DateTime?
+
+  @@index([courseId])   
+  @@index([dayOfWeek])
+}
+
+enum DayOfWeek {
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SATURDAY
+  SUNDAY
+}
