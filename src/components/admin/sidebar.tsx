@@ -4,6 +4,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import LogoutButton from "@/components/logout-button";
+import { cn } from "@/utils/cn.utils";
 
 const navItems = [
   { label: "Dashboard", href: "/admin" },
@@ -27,11 +28,12 @@ export default function Sidebar() {
           <Link
             key={item.href}
             href={item.href}
-            className={`block px-3 py-2 rounded-lg text-sm transition-colors ${
+            className={cn(
+              "block px-3 py-2 rounded-lg text-sm transition-colors",
               pathname === item.href
                 ? "bg-gray-100 text-gray-900 font-medium"
-                : "text-gray-500 hover:bg-gray-50 hover:text-gray-900"
-            }`}
+                : "text-gray-500 hover:bg-gray-50 hover:text-gray-900",
+            )}
           >
             {item.label}
           </Link>
