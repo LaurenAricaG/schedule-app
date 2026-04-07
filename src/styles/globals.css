@@ -1,3 +1,211 @@
 @import "tailwindcss";
 
 @custom-variant dark (&:where(.dark, .dark *));
+
+/* =========================
+   🎯 DESIGN TOKENS
+   ========================= */
+:root {
+  /* 🎨 BRAND */
+  --primary: #6366f1;
+  --primary-container: #818cf8;
+
+  /* 🧱 SURFACES */
+  --surface: #f9fafb;
+  --surface-low: #f3f4f6;
+  --surface-card: #ffffff;
+
+  /* ✍️ TEXT */
+  --on-surface: #111827;
+  --on-surface-variant: #6b7280;
+
+  /* ⚠️ STATES */
+  --success: #22c55e;
+  --warning: #f59e0b;
+  --error: #ef4444;
+
+  /* 📚 COURSES */
+  --course-1: #6366f1;
+  --course-2: #38bdf8;
+  --course-3: #22c55e;
+  --course-4: #f59e0b;
+  --course-5: #f43f5e;
+  --course-6: #a855f7;
+  --course-7: #14b8a6;
+
+  /* 🧩 EXTRAS */
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+}
+
+/* =========================
+   🌙 DARK MODE
+   ========================= */
+.dark {
+  --primary: #818cf8;
+  --primary-container: #a5b4fc;
+
+  --surface: #0f172a;
+  --surface-low: #1e293b;
+  --surface-card: #1e293b;
+
+  --on-surface: #f1f5f9;
+  --on-surface-variant: #94a3b8;
+
+  --success: #4ade80;
+  --warning: #fbbf24;
+  --error: #f87171;
+
+  --course-1: #8b5cf6;
+  --course-2: #38bdf8;
+  --course-3: #4ade80;
+  --course-4: #fbbf24;
+  --course-5: #fb7185;
+  --course-6: #c084fc;
+  --course-7: #2dd4bf;
+}
+
+/* =========================
+   ⚡ TAILWIND THEME (v4)
+   ========================= */
+@theme inline {
+  /* 🎨 Brand */
+  --color-primary: var(--primary);
+  --color-primary-container: var(--primary-container);
+
+  /* 🧱 Surfaces */
+  --color-surface: var(--surface);
+  --color-surface-low: var(--surface-low);
+  --color-surface-card: var(--surface-card);
+
+  /* ✍️ Text */
+  --color-foreground: var(--on-surface);
+  --color-foreground-muted: var(--on-surface-variant);
+
+  /* ⚠️ States */
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-error: var(--error);
+
+  /* 📚 Courses */
+  --color-course-1: var(--course-1);
+  --color-course-2: var(--course-2);
+  --color-course-3: var(--course-3);
+  --color-course-4: var(--course-4);
+  --color-course-5: var(--course-5);
+  --color-course-6: var(--course-6);
+  --color-course-7: var(--course-7);
+
+  /* 🧩 Extras */
+  --radius-xl: var(--radius-xl);
+  --radius-2xl: var(--radius-2xl);
+
+  --font-sans: var(--font-dm-sans);
+}
+
+/* =========================
+   🧼 BASE
+   ========================= */
+html {
+  scrollbar-gutter: stable;
+}
+
+body {
+  background-color: var(--surface);
+  color: var(--on-surface);
+}
+
+/* =========================
+   🧩 UTILIDADES
+   ========================= */
+
+/* Glass */
+.glass {
+  background: color-mix(in srgb, var(--surface-card) 70%, transparent);
+  backdrop-filter: blur(16px);
+}
+
+/* Card */
+.card {
+  background: var(--surface-card);
+  border-radius: var(--radius-2xl);
+  padding: 1rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+}
+
+.dark .card {
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.4);
+}
+
+/* Section */
+.section {
+  background: var(--surface-low);
+  border-radius: var(--radius-xl);
+}
+
+/* Ghost border */
+.ghost-border {
+  outline: 1px solid color-mix(in srgb, var(--on-surface) 15%, transparent);
+}
+
+/* =========================
+   📚 COURSE HELPERS
+   ========================= */
+
+/* Bars */
+.course-bar-1 {
+  background: var(--course-1);
+}
+.course-bar-2 {
+  background: var(--course-2);
+}
+.course-bar-3 {
+  background: var(--course-3);
+}
+.course-bar-4 {
+  background: var(--course-4);
+}
+.course-bar-5 {
+  background: var(--course-5);
+}
+.course-bar-6 {
+  background: var(--course-6);
+}
+.course-bar-7 {
+  background: var(--course-7);
+}
+
+/* Text */
+.text-course-1 {
+  color: var(--course-1);
+}
+.text-course-2 {
+  color: var(--course-2);
+}
+.text-course-3 {
+  color: var(--course-3);
+}
+.text-course-4 {
+  color: var(--course-4);
+}
+.text-course-5 {
+  color: var(--course-5);
+}
+.text-course-6 {
+  color: var(--course-6);
+}
+.text-course-7 {
+  color: var(--course-7);
+}
+
+/* =========================
+   ✨ SCROLLBAR
+   ========================= */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--surface-low);
+  border-radius: 999px;
+}
