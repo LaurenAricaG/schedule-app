@@ -197,15 +197,3 @@ body {
 .text-course-7 {
   color: var(--course-7);
 }
-
-/* =========================
-   ✨ SCROLLBAR
-   ========================= */
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--surface-low);
-  border-radius: 999px;
-}
