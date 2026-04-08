@@ -23,14 +23,14 @@ export default function Sidebar({ open, setOpen, isDesktop }: any) {
     <>
       {open && (
         <div
-          className="fixed inset-0 z-[60] bg-black/25 backdrop-blur-[1px] md:hidden"
+          className="fixed inset-0 z-60 bg-black/25 backdrop-blur-[1px] md:hidden"
           onClick={() => setOpen(false)}
         />
       )}
 
       <aside
         className={cn(
-          "fixed top-0 left-0 z-[70] flex h-dvh flex-col border-r border-black/10 bg-(--color-surface) transition-all duration-300 dark:border-white/10 md:sticky md:top-0 md:z-50",
+          "fixed top-0 left-0 z-70 flex h-dvh flex-col border-r border-black/10 bg-(--color-surface) transition-all duration-300 dark:border-white/10 md:sticky md:top-0 md:z-50",
 
           open ? "translate-x-0" : "-translate-x-full md:translate-x-0",
 
@@ -46,7 +46,7 @@ export default function Sidebar({ open, setOpen, isDesktop }: any) {
               !open && "md:justify-center md:w-full",
             )}
           >
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-(--color-primary)/14 text-(--color-primary)">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary/14 text-(--color-primary)">
               <BiCalendar size={18} />
             </div>
 
@@ -97,8 +97,8 @@ export default function Sidebar({ open, setOpen, isDesktop }: any) {
                   className={cn(
                     "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-all",
                     isActive
-                      ? "bg-(--color-primary)/12 font-semibold text-(--color-primary)"
-                      : "text-(--color-foreground-muted) hover:bg-(--color-primary)/8 hover:text-(--color-primary)",
+                      ? "bg-primary/12 font-semibold text-(--color-primary)"
+                      : "text-(--color-foreground-muted) hover:bg-primary/8 hover:text-(--color-primary)",
                     !open && "md:justify-center",
                   )}
                 >
