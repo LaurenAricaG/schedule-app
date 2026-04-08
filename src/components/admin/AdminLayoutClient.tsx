@@ -5,6 +5,8 @@ import Sidebar from "./Sidebar";
 import Header from "./Header";
 import { useMediaQuery } from "@/hooks/use-media-query";
 
+const DESKTOP_SIDEBAR_STORAGE_KEY = "admin-sidebar-desktop-open";
+
 export default function AdminLayoutClient({
   user,
   children,
@@ -21,19 +23,44 @@ export default function AdminLayoutClient({
   const setOpen = isDesktop ? setIsDesktopOpen : setIsMobileOpen;
 
   useEffect(() => {
+    const storedDesktopState = window.localStorage.getItem(
+      DESKTOP_SIDEBAR_STORAGE_KEY,
+    );
+    if (storedDesktopState === null) return;
+
+    setIsDesktopOpen(storedDesktopState === "true");
+  }, []);
+
+  useEffect(() => {
+    window.localStorage.setItem(
+      DESKTOP_SIDEBAR_STORAGE_KEY,
+      String(isDesktopOpen),
+    );
+  }, [isDesktopOpen]);
+
+  useEffect(() => {
     if (!isDesktop) {
       setIsMobileOpen(false);
     }
   }, [isDesktop]);
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
-      <Sidebar open={open} setOpen={setOpen} />
+    <div className="flex h-dvh overflow-hidden bg-(--color-surface)">
+      <Sidebar open={open} setOpen={setOpen} isDesktop={isDesktop} />
 
-      <div className="flex-1">
+      <div className="flex min-w-0 flex-1 flex-col">
+      {/* 
+        Scroll desde el header
+        <div className="flex min-w-0 flex-1 flex-col overflow-y-auto"> 
+      */}
         <Header open={open} setOpen={setOpen} user={user} />
-        <main className="p-8">{children}</main>
+        <main className="flex-1 overflow-y-auto p-4 md:p-6">{children}</main>
+        {/* 
+          Scroll desde el contenido
+          <main className="flex-1 p-8">{children}</main> 
+        */}
       </div>
     </div>
+    
   );
 }
