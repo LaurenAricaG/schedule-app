@@ -1,4 +1,4 @@
-import AdminLayoutClient from "@/components/admin/AdminLayoutClient";
+import AdminLayoutClient from "@/components/admin/layout/AdminLayoutClient";
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 

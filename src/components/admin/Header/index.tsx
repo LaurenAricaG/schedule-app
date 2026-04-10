@@ -5,7 +5,7 @@ import ThemeToggle from "@/components/theme/ThemeToggle";
 
 export default function Header({ open, setOpen, user }: any) {
   return (
-    <header className="z-50 border-b border-black/10 bg-(--color-surface)/80 backdrop-blur dark:border-white/10">
+    <header className="z-50 border-b border-black/10 bg-surface/80 backdrop-blur dark:border-white/10">
       <div className="flex h-16 items-center justify-between px-4 md:px-5">
         <div className="flex items-center gap-3">
           <button

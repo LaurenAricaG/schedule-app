@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import LogoutButton from "@/components/logout-button";
+import LogoutButton from "@/components/ui/LogoutButton";
 import { cn } from "@/utils/cn.utils";
 import { LuLayoutDashboard } from "react-icons/lu";
 import { FaUsers } from "react-icons/fa";

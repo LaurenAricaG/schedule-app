@@ -1,6 +1,6 @@
+import LogoutButton from "@/components/ui/LogoutButton";
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
-import LogoutButton from "@/components/logout-button";
 
 export default async function PanelLayout({
   children,

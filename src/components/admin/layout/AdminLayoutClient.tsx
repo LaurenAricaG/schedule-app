@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Sidebar from "./Sidebar";
-import Header from "./Header";
 import { useMediaQuery } from "@/hooks/use-media-query";
+import Sidebar from "@/components/admin/Sidebar";
+import Header from "@/components/admin/Header";
 
 const DESKTOP_SIDEBAR_STORAGE_KEY = "admin-sidebar-desktop-open";
 
@@ -49,7 +49,7 @@ export default function AdminLayoutClient({
       <Sidebar open={open} setOpen={setOpen} isDesktop={isDesktop} />
 
       <div className="flex min-w-0 flex-1 flex-col">
-      {/* 
+        {/* 
         Scroll desde el header
         <div className="flex min-w-0 flex-1 flex-col overflow-y-auto"> 
       */}
@@ -61,6 +61,5 @@ export default function AdminLayoutClient({
         */}
       </div>
     </div>
-    
   );
 }

@@ -62,14 +62,16 @@ export default function AdminPage() {
       </section>
 
       <section className="grid gap-4 xl:grid-cols-[1.45fr_1fr]">
-        <div className="space-y-4 rounded-2xl bg-(--color-surface-low)/55 p-4">
+        <div className="space-y-4 rounded-2xl bg-surface-low/55 p-4">
           <div className="grid gap-4 sm:grid-cols-2">
             {stats.map((item) => (
               <article
                 key={item.label}
                 className="rounded-xl border border-black/10 bg-(--color-surface-card) p-5 dark:border-white/10"
               >
-                <p className="text-sm text-(--color-foreground-muted)">{item.label}</p>
+                <p className="text-sm text-(--color-foreground-muted)">
+                  {item.label}
+                </p>
                 <p className="mt-1 text-4xl font-semibold tracking-tight text-(--color-foreground)">
                   {item.value}
                 </p>
@@ -94,8 +96,12 @@ export default function AdminPage() {
                   className="grid grid-cols-[1fr_auto] items-center gap-3"
                 >
                   <div className="flex items-center gap-2.5">
-                    <span className={`h-3 w-3 rounded-full ${course.colorClass}`} />
-                    <p className="text-sm text-(--color-foreground)">{course.name}</p>
+                    <span
+                      className={`h-3 w-3 rounded-full ${course.colorClass}`}
+                    />
+                    <p className="text-sm text-(--color-foreground)">
+                      {course.name}
+                    </p>
                     <div className="h-1.5 flex-1 rounded-full bg-(--color-surface-low)">
                       <div
                         className={`h-full rounded-full ${course.colorClass}`}
@@ -103,51 +109,55 @@ export default function AdminPage() {
                       />
                     </div>
                   </div>
-                  <p className="text-sm text-(--color-foreground-muted)">{course.value}%</p>
+                  <p className="text-sm text-(--color-foreground-muted)">
+                    {course.value}%
+                  </p>
                 </div>
               ))}
             </div>
           </article>
         </div>
 
-        <article className="rounded-2xl bg-(--color-surface-low)/55 p-4">
+        <article className="rounded-2xl bg-surface-low/55 p-4">
           <div className="rounded-xl border border-black/10 bg-(--color-surface-card) p-5 dark:border-white/10">
-          <h2 className="text-sm font-semibold uppercase tracking-[0.14em] text-(--color-foreground-muted)">
-            Actividad reciente
-          </h2>
+            <h2 className="text-sm font-semibold uppercase tracking-[0.14em] text-(--color-foreground-muted)">
+              Actividad reciente
+            </h2>
 
-          <div className="mt-4 space-y-4">
-            {activity.map((item) => (
-              <div
-                key={item.name}
-                className="flex items-start gap-3 rounded-xl border border-black/10 bg-(--color-surface-card) p-3 dark:border-white/10"
-              >
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-(--color-course-6)/20 text-sm font-semibold text-(--color-course-6)">
-                  {initials(item.name)}
+            <div className="mt-4 space-y-4">
+              {activity.map((item) => (
+                <div
+                  key={item.name}
+                  className="flex items-start gap-3 rounded-xl border border-black/10 bg-(--color-surface-card) p-3 dark:border-white/10"
+                >
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg--course-6/20 text-sm font-semibold text-(--color-course-6)">
+                    {initials(item.name)}
+                  </div>
+                  <div className="min-w-0">
+                    <p className="truncate text-sm font-semibold text-(--color-foreground)">
+                      {item.name}
+                    </p>
+                    <p className="text-sm text-(--color-foreground-muted)">
+                      {item.action}
+                    </p>
+                    <p className="mt-1 flex items-center gap-1 text-xs text-(--color-foreground-muted)">
+                      <BiTimeFive />
+                      {item.time}
+                    </p>
+                  </div>
                 </div>
-                <div className="min-w-0">
-                  <p className="truncate text-sm font-semibold text-(--color-foreground)">
-                    {item.name}
-                  </p>
-                  <p className="text-sm text-(--color-foreground-muted)">{item.action}</p>
-                  <p className="mt-1 flex items-center gap-1 text-xs text-(--color-foreground-muted)">
-                    <BiTimeFive />
-                    {item.time}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
 
-          <div className="mt-5 rounded-xl border border-(--color-primary)/25 bg-(--color-primary)/10 p-3 text-sm text-(--color-foreground)">
-            <p className="flex items-center gap-2 font-medium text-(--color-primary)">
-              <BiCheckCircle />
-              Todo en orden
-            </p>
-            <p className="mt-1 text-(--color-foreground-muted)">
-              No hay alertas criticas en el sistema.
-            </p>
-          </div>
+            <div className="mt-5 rounded-xl border border-primary/25 bg-primary/10 p-3 text-sm text-(--color-foreground)">
+              <p className="flex items-center gap-2 font-medium text-(--color-primary)">
+                <BiCheckCircle />
+                Todo en orden
+              </p>
+              <p className="mt-1 text-(--color-foreground-muted)">
+                No hay alertas criticas en el sistema.
+              </p>
+            </div>
           </div>
         </article>
       </section>
