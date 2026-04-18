@@ -1,13 +1,16 @@
 "use client";
 
-import { ErrorFallback } from "@/components/error/ErrorFallback";
+import {
+  ErrorFallback,
+  type ErrorWithDigest,
+} from "@/components/error/ErrorFallback";
 import "@/styles/globals.css";
 
 export default function GlobalError({
   error,
   reset,
 }: {
-  error: Error & { digest?: string };
+  error: ErrorWithDigest;
   reset: () => void;
 }) {
   return (

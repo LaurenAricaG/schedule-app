@@ -37,36 +37,56 @@ export default function LoginForm() {
   }
 
   return (
-    <div className="w-full max-w-sm p-8 bg-white rounded-xl border border-gray-200">
-      <h1 className="text-xl font-medium mb-8">Iniciar sesión</h1>
+    <div className="w-full rounded-2xl border border-black/10 bg-(--color-surface-card) p-8 shadow-sm dark:border-white/10">
+      <h1 className="mb-8 text-xl font-semibold tracking-tight text-(--color-foreground)">
+        Iniciar sesión
+      </h1>
 
       <form onSubmit={handleSubmit} className="space-y-5">
         <div className="space-y-1.5">
-          <label className="block text-sm text-gray-600">Usuario</label>
+          <label
+            htmlFor="login-username"
+            className="block text-sm text-(--color-foreground-muted)"
+          >
+            Usuario
+          </label>
           <input
+            id="login-username"
             name="username"
             type="text"
             required
-            className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg outline-none focus:border-gray-400"
+            autoComplete="username"
+            className="w-full rounded-xl border border-black/10 bg-(--color-surface) px-3 py-2.5 text-sm text-(--color-foreground) outline-none transition-colors focus:border-(--color-primary) dark:border-white/10"
           />
         </div>
 
         <div className="space-y-1.5">
-          <label className="block text-sm text-gray-600">Contraseña</label>
+          <label
+            htmlFor="login-password"
+            className="block text-sm text-(--color-foreground-muted)"
+          >
+            Contraseña
+          </label>
           <input
+            id="login-password"
             name="password"
             type="password"
             required
-            className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg outline-none focus:border-gray-400"
+            autoComplete="current-password"
+            className="w-full rounded-xl border border-black/10 bg-(--color-surface) px-3 py-2.5 text-sm text-(--color-foreground) outline-none transition-colors focus:border-(--color-primary) dark:border-white/10"
           />
         </div>
 
-        {error && <p className="text-sm text-red-500">{error}</p>}
+        {error ? (
+          <p className="text-sm font-medium text-(--color-error)" role="alert">
+            {error}
+          </p>
+        ) : null}
 
         <button
           type="submit"
           disabled={loading}
-          className="w-full py-2 text-sm font-medium bg-gray-900 text-white rounded-lg hover:bg-gray-700 disabled:opacity-50 transition-colors"
+          className="w-full rounded-xl bg-(--color-primary) py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-50"
         >
           {loading ? "Ingresando..." : "Ingresar"}
         </button>
