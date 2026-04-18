@@ -1,12 +1,15 @@
 "use client";
 
-import { ErrorFallback } from "@/components/error/ErrorFallback";
+import {
+  ErrorFallback,
+  type ErrorWithDigest,
+} from "@/components/error/ErrorFallback";
 
 export default function AppError({
   error,
   reset,
 }: {
-  error: Error & { digest?: string };
+  error: ErrorWithDigest;
   reset: () => void;
 }) {
   return <ErrorFallback error={error} reset={reset} variant="full" />;

@@ -1,12 +1,15 @@
 "use client";
 
-import { ErrorFallback } from "@/components/error/ErrorFallback";
+import {
+  ErrorFallback,
+  type ErrorWithDigest,
+} from "@/components/error/ErrorFallback";
 
 export default function LoginError({
   error,
   reset,
 }: {
-  error: Error;
+  error: ErrorWithDigest;
   reset: () => void;
 }) {
   return (

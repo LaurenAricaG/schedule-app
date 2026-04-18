@@ -2,8 +2,11 @@
 
 import { useEffect } from "react";
 
+/** Error típico en `error.tsx` del App Router (Next puede añadir `digest`). */
+export type ErrorWithDigest = Error & { digest?: string };
+
 export type ErrorFallbackProps = {
-  error: Error & { digest?: string };
+  error: ErrorWithDigest;
   reset: () => void;
   variant?: "full" | "embedded" | "compact";
   title?: string;

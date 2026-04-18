@@ -1,16 +1,16 @@
 "use client";
 
 import { Component, type ErrorInfo, type ReactNode } from "react";
-import { ErrorFallback } from "./ErrorFallback";
+import { ErrorFallback, type ErrorWithDigest } from "./ErrorFallback";
 
 type Props = {
   children: ReactNode;
   title?: string;
-  variant?: "compact" | "embedded";
+  variant?: "full" | "embedded" | "compact";
 };
 
 type State = {
-  error: (Error & { digest?: string }) | null;
+  error: ErrorWithDigest | null;
 };
 
 export class ErrorBoundary extends Component<Props, State> {

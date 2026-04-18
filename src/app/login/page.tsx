@@ -1,10 +1,10 @@
-import LoginForm from "@/components/login/LoginForm";
+import LoginClient from "@/components/login/LoginClient";
 
 export default function LoginPage() {
   return (
-    <main className="flex items-center justify-center md:h-screen">
-      <div className="relative mx-auto flex w-full max-w-100 flex-col space-y-2.5 p-4 md:-mt-32">
-        <LoginForm />
+    <main className="flex min-h-dvh flex-1 items-center justify-center bg-(--color-surface) px-4 py-12">
+      <div className="w-full max-w-sm">
+        <LoginClient />
       </div>
     </main>
   );
