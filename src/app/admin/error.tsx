@@ -16,7 +16,7 @@ export default function AdminError({
     <ErrorFallback
       error={error}
       reset={reset}
-      variant="embedded"
+      variant="full"
       title="No se pudo cargar el administrador"
     />
   );
