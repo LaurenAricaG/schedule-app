@@ -130,7 +130,7 @@ export default function AdminPage() {
                   key={item.name}
                   className="flex items-start gap-3 rounded-xl border border-black/10 bg-(--color-surface-card) p-3 dark:border-white/10"
                 >
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg--course-6/20 text-sm font-semibold text-(--color-course-6)">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-(--course-6)/20 text-sm font-semibold text-(--color-course-6)">
                     {initials(item.name)}
                   </div>
                   <div className="min-w-0">

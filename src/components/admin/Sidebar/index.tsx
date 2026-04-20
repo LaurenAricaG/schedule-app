@@ -128,7 +128,7 @@ export default function Sidebar({ open, setOpen, isDesktop }: any) {
           <div className="group relative">
             <LogoutButton
               className={cn(
-                "w-full rounded-xl px-3 py-2 text-(--color-error) transition-all",
+                "w-full rounded-xl px-3 py-2 transition-all",
                 !open && "md:justify-center",
               )}
             >

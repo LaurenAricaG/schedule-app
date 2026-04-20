@@ -5,7 +5,7 @@ import {
   type ErrorWithDigest,
 } from "@/components/error/ErrorFallback";
 
-export default function AdminError({
+export default function RolError({
   error,
   reset,
 }: {
@@ -17,7 +17,7 @@ export default function AdminError({
       error={error}
       reset={reset}
       variant="full"
-      title="No se pudo cargar el administrador"
+      title="No se pudo cargar el módulo de roles"
     />
   );
 }

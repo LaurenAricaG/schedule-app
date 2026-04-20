@@ -21,8 +21,11 @@
 
   /* ⚠️ STATES */
   --success: #22c55e;
+  --success-rgb: 34, 197, 94;
   --warning: #f59e0b;
+  --warning-rgb: 245, 158, 11;
   --error: #ef4444;
+  --error-rgb: 239, 68, 68;
 
   /* 📚 COURSES */
   --course-1: #6366f1;
@@ -53,8 +56,11 @@
   --on-surface-variant: #94a3b8;
 
   --success: #4ade80;
+  --success-rgb: 74, 222, 128;
   --warning: #fbbf24;
+  --warning-rgb: 251, 191, 36;
   --error: #f87171;
+  --error-rgb: 248, 113, 113;
 
   --course-1: #8b5cf6;
   --course-2: #38bdf8;

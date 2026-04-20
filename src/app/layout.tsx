@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "@/styles/globals.css";
 import ThemeProvider from "@/components/theme/ThemeProvider";
 import { cn } from "@/utils/cn.utils";
+import { Toaster } from "sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,7 +35,25 @@ export default function RootLayout({
       )}
     >
       <body className="min-h-full flex flex-col">
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider>
+          {children}
+          <Toaster
+            toastOptions={{
+              style: {
+                background: "var(--surface-card)",
+                border:
+                  "1px solid color-mix(in srgb, var(--on-surface) 10%, transparent)",
+                color: "var(--on-surface)",
+                fontSize: "14px",
+              },
+              classNames: {
+                success: "!text-[var(--success)]",
+                error: "!text-[var(--error)]",
+                description: "!text-[var(--on-surface-variant)]",
+              },
+            }}
+          />
+        </ThemeProvider>
       </body>
     </html>
   );
