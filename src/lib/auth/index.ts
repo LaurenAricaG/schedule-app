@@ -5,6 +5,9 @@ import { prisma } from "@/lib/prisma";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   secret: process.env.AUTH_SECRET,
+  session: {
+    strategy: "jwt",
+  },
 
   cookies: {
     sessionToken: {
