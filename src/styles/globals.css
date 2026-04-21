@@ -26,6 +26,8 @@
   --warning-rgb: 245, 158, 11;
   --error: #ef4444;
   --error-rgb: 239, 68, 68;
+  --info: #3b82f6;
+  --info-rgb: 59, 130, 246;
 
   /* 📚 COURSES */
   --course-1: #6366f1;
@@ -61,6 +63,8 @@
   --warning-rgb: 251, 191, 36;
   --error: #f87171;
   --error-rgb: 248, 113, 113;
+  --info: #60a5fa;
+  --info-rgb: 96, 165, 250;
 
   --course-1: #8b5cf6;
   --course-2: #38bdf8;
@@ -92,6 +96,7 @@
   --color-success: var(--success);
   --color-warning: var(--warning);
   --color-error: var(--error);
+  --color-info: var(--info);
 
   /* 📚 Courses */
   --color-course-1: var(--course-1);
