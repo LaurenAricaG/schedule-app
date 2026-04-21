@@ -49,7 +49,10 @@ export default function RootLayout({
               classNames: {
                 success: "!text-[var(--success)]",
                 error: "!text-[var(--error)]",
+                warning: "!text-[var(--warning)]",
+                info: "!text-[var(--info)]",
                 description: "!text-[var(--on-surface-variant)]",
+                title: "!font-medium",
               },
             }}
           />
