@@ -6,6 +6,7 @@ import { Role } from "@/types/definitions";
 import { cn } from "@/utils/cn.utils";
 import { useState, useTransition } from "react";
 import { FaUserCog, FaUserGraduate } from "react-icons/fa";
+import { toast } from "sonner";
 import {
   FiEdit2,
   FiTrash2,
@@ -14,7 +15,6 @@ import {
   FiUsers,
   FiUserCheck,
 } from "react-icons/fi";
-import { toast } from "sonner";
 
 const ICON_MAP: Record<string, React.ElementType> = {
   admin: FaUserCog,
@@ -34,6 +34,7 @@ const CardRoles = ({
   const [confirmOpen, setConfirmOpen] = useState(false);
   const Icon = ICON_MAP[role.rol] ?? FiUsers;
   const deleted = role.deletedAt !== null;
+  const isAdmin = role.rol === "admin";
 
   const handleDelete = () => {
     startTransition(async () => {
@@ -98,8 +99,19 @@ const CardRoles = ({
               </ActionButton>
             ) : (
               <ActionButton
-                onClick={() => setConfirmOpen(true)}
-                className="text-error hover:bg-error/10"
+                onClick={() => {
+                  if (isAdmin) {
+                    toast.warning(
+                      "El rol de administrador no puede eliminarse.",
+                    );
+                    return;
+                  }
+                  setConfirmOpen(true);
+                }}
+                className={cn(
+                  "text-error hover:bg-error/10",
+                  isAdmin && "opacity-40 cursor-not-allowed",
+                )}
               >
                 <FiTrash2 size={13} />
               </ActionButton>
