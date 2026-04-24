@@ -1,3 +1,5 @@
+"use client";
+
 import { ActionButton } from "@/components/ui/ActionButton";
 import { ConfirmModal } from "@/components/ui/ConfirmModal";
 import { StatusBadge } from "@/components/ui/StatusBadge";
@@ -23,12 +25,17 @@ const ICON_MAP: Record<string, React.ElementType> = {
   apoderado: FiUserCheck,
 };
 
+/**
+ * Componente cliente que muestra la información de un rol específico en formato de tarjeta.
+ * Incluye acciones para editar, eliminar (lógico) y restaurar el rol.
+ * Las modificaciones utilizan useTransition para mostrar un estado de carga.
+ *
+ * @param {Role} role - Objeto con la información del rol a mostrar.
+ */
 const CardRoles = ({
   role,
-  onSuccess,
 }: {
   role: Role;
-  onSuccess: () => void;
 }) => {
   const [isPending, startTransition] = useTransition();
   const [confirmOpen, setConfirmOpen] = useState(false);
@@ -41,7 +48,6 @@ const CardRoles = ({
       const result = await deleteRole(role.id);
       if (result.success) {
         toast.success("Rol eliminado correctamente");
-        onSuccess();
       } else {
         toast.error(result.error);
       }
@@ -54,7 +60,6 @@ const CardRoles = ({
       const result = await restoreRole(role.id);
       if (result.success) {
         toast.success("Rol restaurado correctamente");
-        onSuccess();
       } else {
         toast.error(result.error);
       }

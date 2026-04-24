@@ -1,22 +1,34 @@
+import { Suspense } from "react";
 import RolesList from "@/components/admin/Roles";
-import Title from "@/components/admin/Title";
+import Title from "@/components/ui/Title";
 import { ErrorBoundary } from "@/components/error/ErrorBoundary";
+import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
+import { RolesSkeleton } from "@/components/ui/Skeletons";
 
-const Roles = () => {
+/**
+ * Página principal de administración de roles.
+ * Utiliza Suspense para cargar asíncronamente la lista de roles
+ * mientras muestra un skeleton de carga.
+ */
+export default function RolesPage() {
   return (
     <section className="space-y-6">
-      <Title
-        title="Gestionar Roles"
-        breadcrumbs={[{ label: "Admin", href: "/admin" }, { label: "Roles" }]}
+      {/* Navegación de migas de pan */}
+      <Breadcrumbs
+        items={[{ label: "Admin", href: "/admin" }, { label: "Roles" }]}
       />
+
+      <Title title="Gestionar Roles" />
+      
+      {/* Manejador de errores encapsulado para la lista de roles */}
       <ErrorBoundary
         variant="compact"
         title="No se pudo cargar la tabla de roles"
       >
-        <RolesList />
+        <Suspense fallback={<RolesSkeleton />}>
+          <RolesList />
+        </Suspense>
       </ErrorBoundary>
     </section>
   );
-};
-
-export default Roles;
+}
