@@ -21,7 +21,13 @@ type CoursesByUserResponse = {
  * Maneja estados locales para los modales de confirmación y transiciones
  * para las Server Actions de eliminar y restaurar cursos.
  */
-export default function UserCoursesDetail({ userId, initialData }: { userId: number; initialData: CoursesByUserResponse }) {
+export default function UserCoursesDetail({
+  userId,
+  initialData,
+}: {
+  userId: number;
+  initialData: CoursesByUserResponse;
+}) {
   const [confirmOpen, setConfirmOpen] = useState<number | null>(null);
   const [isPending, startTransition] = useTransition();
 
@@ -55,7 +61,9 @@ export default function UserCoursesDetail({ userId, initialData }: { userId: num
       {/* Header con nombre del usuario */}
       <p className=" text-sm text-foreground-muted">
         Gestiona los cursos de{" "}
-        {initialData.user ? `${initialData.user.name} ${initialData.user.lastname}` : "este usuario"}
+        {initialData.user
+          ? `${initialData.user.name} ${initialData.user.lastname}`
+          : "este usuario"}
       </p>
 
       {/* Header con botón crear */}
@@ -73,80 +81,80 @@ export default function UserCoursesDetail({ userId, initialData }: { userId: num
       {/* Tabla de cursos */}
       <div className="rounded-2xl border border-black/8 bg-surface-card p-6 dark:border-white/10">
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[600px] text-sm">
+          <table className="w-full min-w-150 text-sm">
             <thead className="border-b border-black/8 dark:border-white/10">
-            <tr>
-              <th className="pb-4 text-left font-semibold text-foreground">
-                Curso
-              </th>
-              <th className="pb-4 text-left font-semibold text-foreground">
-                Profesor
-              </th>
-              <th className="pb-4 text-center font-semibold text-foreground">
-                Estado
-              </th>
-              <th className="pb-4 text-right font-semibold text-foreground">
-                Acciones
-              </th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-black/8 dark:divide-white/10">
-            {initialData.courses.map((course) => {
-              const deleted = course.deletedAt !== null;
-              return (
-                <tr
-                  key={course.id}
-                  className={cn(
-                    "hover:bg-surface-low/50 transition-colors",
-                    deleted && "opacity-60",
-                  )}
-                >
-                  <td className="py-4">
-                    <div className="flex items-center gap-3">
-                      <span
-                        className="h-3 w-3 rounded-full"
-                        style={{
-                          backgroundColor: course.color || "#6366f1",
-                        }}
-                      />
-                      <span className="font-medium text-foreground">
-                        {course.name}
-                      </span>
-                    </div>
-                  </td>
-                  <td className="py-4 text-foreground-muted">
-                    {course.teacher}
-                  </td>
-                  <td className="py-4 text-center">
-                    <StatusBadge active={!deleted} />
-                  </td>
-                  <td className="py-4">
-                    <div className="flex items-center justify-end gap-1">
-                      <ActionButton onClick={() => {}}>
-                        <FiEdit2 size={13} />
-                      </ActionButton>
+              <tr>
+                <th className="pb-4 text-left font-semibold text-foreground">
+                  Curso
+                </th>
+                <th className="pb-4 text-left font-semibold text-foreground">
+                  Profesor
+                </th>
+                <th className="pb-4 text-center font-semibold text-foreground">
+                  Estado
+                </th>
+                <th className="pb-4 text-right font-semibold text-foreground">
+                  Acciones
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-black/8 dark:divide-white/10">
+              {initialData.courses.map((course) => {
+                const deleted = course.deletedAt !== null;
+                return (
+                  <tr
+                    key={course.id}
+                    className={cn(
+                      "hover:bg-surface-low/50 transition-colors",
+                      deleted && "opacity-60",
+                    )}
+                  >
+                    <td className="py-4">
+                      <div className="flex items-center gap-3">
+                        <span
+                          className="h-3 w-3 rounded-full"
+                          style={{
+                            backgroundColor: course.color || "#6366f1",
+                          }}
+                        />
+                        <span className="font-medium text-foreground">
+                          {course.name}
+                        </span>
+                      </div>
+                    </td>
+                    <td className="py-4 text-foreground-muted">
+                      {course.teacher}
+                    </td>
+                    <td className="py-4 text-center">
+                      <StatusBadge active={!deleted} />
+                    </td>
+                    <td className="py-4">
+                      <div className="flex items-center justify-end gap-1">
+                        <ActionButton onClick={() => {}}>
+                          <FiEdit2 size={13} />
+                        </ActionButton>
 
-                      {deleted ? (
-                        <ActionButton
-                          onClick={() => handleRestore(course.id)}
-                          className="text-success hover:bg-success/10"
-                        >
-                          <FiRotateCcw size={13} />
-                        </ActionButton>
-                      ) : (
-                        <ActionButton
-                          onClick={() => setConfirmOpen(course.id)}
-                          className="text-error hover:bg-error/10"
-                        >
-                          <FiTrash2 size={13} />
-                        </ActionButton>
-                      )}
-                    </div>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
+                        {deleted ? (
+                          <ActionButton
+                            onClick={() => handleRestore(course.id)}
+                            className="text-success hover:bg-success/10"
+                          >
+                            <FiRotateCcw size={13} />
+                          </ActionButton>
+                        ) : (
+                          <ActionButton
+                            onClick={() => setConfirmOpen(course.id)}
+                            className="text-error hover:bg-error/10"
+                          >
+                            <FiTrash2 size={13} />
+                          </ActionButton>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
           </table>
         </div>
       </div>
