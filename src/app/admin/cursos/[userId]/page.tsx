@@ -11,7 +11,9 @@ import { UserCoursesDetailSkeleton } from "@/components/ui/Skeletons";
  */
 async function CoursesLoader({ userId }: { userId: number }) {
   const result = await getCoursesByUser(userId);
-  const initialData = result.success ? result.data : { user: null, courses: [] };
+  const initialData = result.success
+    ? result.data
+    : { user: null, courses: [] };
   return <UserCoursesDetail userId={userId} initialData={initialData} />;
 }
 
@@ -26,18 +28,16 @@ export default async function UserCoursesPage(props: {
 
   return (
     <section className="space-y-6">
-      <div className="space-y-4">
-        {/* Navegación de migas de pan */}
-        <Breadcrumbs
-          items={[
-            { label: "Admin", href: "/admin" },
-            { label: "Cursos", href: "/admin/cursos" },
-            { label: "Lista de cursos" },
-          ]}
-        />
-        <Title title="Cursos por usuario" />
-      </div>
-      
+      {/* Navegación de migas de pan */}
+      <Breadcrumbs
+        items={[
+          { label: "Admin", href: "/admin" },
+          { label: "Cursos", href: "/admin/cursos" },
+          { label: "Lista de cursos" },
+        ]}
+      />
+      <Title title="Cursos por usuario" />
+
       {/* Manejador de errores para el detalle de cursos */}
       <ErrorBoundary variant="compact" title="No se pudieron cargar los cursos">
         <Suspense fallback={<UserCoursesDetailSkeleton />}>

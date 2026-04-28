@@ -1,6 +1,5 @@
 import { User } from "@/types/definitions";
 import Link from "next/link";
-import { FiChevronRight } from "react-icons/fi";
 import { getUsersWithCoursesCount } from "@/lib/courses";
 
 type UserWithCourseCount = User & {
@@ -64,9 +63,8 @@ export default async function UsersCoursesList() {
                 </td>
                 <td className="py-4 text-right">
                   <Link href={`/admin/cursos/${user.id}`}>
-                    <button className="inline-flex items-center gap-1 rounded-lg bg-primary/10 px-3 py-1 text-sm font-medium text-primary transition-colors hover:bg-primary/20">
+                    <button className="inline-flex items-center gap-1 rounded-lg bg-primary/10 px-4 py-2 text-sm font-medium text-primary transition-colors hover:bg-primary/20">
                       Ver cursos
-                      <FiChevronRight size={14} />
                     </button>
                   </Link>
                 </td>
