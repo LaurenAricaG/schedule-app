@@ -10,6 +10,7 @@ import { ActionResult } from "@/types/definitions";
 type GetCoursesByUserResponse = ActionResult<{
   user: Partial<User> | null;
   courses: Course[];
+  total: number;
 }>;
 
 const CourseSchema = z.object({
@@ -23,25 +24,43 @@ const CourseSchema = z.object({
  * Obtiene la lista de usuarios con rol de estudiante y la cantidad total de cursos asignados a cada uno.
  * @returns {Promise<ActionResult<any>>} Resultado de la operación con la data de usuarios.
  */
-export async function getUsersWithCoursesCount(): Promise<ActionResult<any>> {
+export async function getUsersWithCoursesCount(
+  page: number = 1,
+  limit: number = 10
+): Promise<ActionResult<any>> {
   try {
-    const users = await prisma.user.findMany({
-      where: {
-        deletedAt: null,
-        rol: {
-          rol: "estudiante",
+    const skip = (page - 1) * limit;
+
+    const [users, total] = await Promise.all([
+      prisma.user.findMany({
+        where: {
+          deletedAt: null,
+          rol: {
+            rol: "estudiante",
+          },
         },
-      },
-      include: {
-        _count: {
-          select: { courses: true },
+        include: {
+          _count: {
+            select: { courses: true },
+          },
         },
-      },
-      orderBy: {
-        name: "asc",
-      },
-    });
-    return { success: true, data: users };
+        orderBy: {
+          name: "asc",
+        },
+        skip,
+        take: limit,
+      }),
+      prisma.user.count({
+        where: {
+          deletedAt: null,
+          rol: {
+            rol: "estudiante",
+          },
+        },
+      }),
+    ]);
+
+    return { success: true, data: { users, total } };
   } catch {
     return {
       success: false,
@@ -58,6 +77,8 @@ export async function getUsersWithCoursesCount(): Promise<ActionResult<any>> {
  */
 export async function getCoursesByUser(
   userId: number,
+  page: number = 1,
+  limit: number = 6
 ): Promise<GetCoursesByUserResponse> {
   try {
     const user = await prisma.user.findUnique({
@@ -70,16 +91,24 @@ export async function getCoursesByUser(
       },
     });
 
-    const courses = await prisma.course.findMany({
-      where: { userId },
-      orderBy: { createdAt: "asc" },
-    });
+    const skip = (page - 1) * limit;
+
+    const [courses, total] = await Promise.all([
+      prisma.course.findMany({
+        where: { userId },
+        orderBy: { createdAt: "asc" },
+        skip,
+        take: limit,
+      }),
+      prisma.course.count({ where: { userId } })
+    ]);
 
     return {
       success: true,
       data: {
         user,
         courses,
+        total,
       },
     };
   } catch {

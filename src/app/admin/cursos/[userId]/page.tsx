@@ -2,29 +2,33 @@ import { Suspense } from "react";
 import UserCoursesDetail from "@/components/admin/Courses/UserCoursesDetail";
 import { ErrorBoundary } from "@/components/error/ErrorBoundary";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
-import Title from "@/components/ui/Title";
 import { getCoursesByUser } from "@/lib/courses";
 import { UserCoursesDetailSkeleton } from "@/components/ui/Skeletons";
 
 /**
  * Componente asíncrono para cargar los cursos del usuario.
  */
-async function CoursesLoader({ userId }: { userId: number }) {
-  const result = await getCoursesByUser(userId);
+async function CoursesLoader({ userId, page }: { userId: number; page: number }) {
+  const result = await getCoursesByUser(userId, page, 6);
   const initialData = result.success
     ? result.data
-    : { user: null, courses: [] };
-  return <UserCoursesDetail userId={userId} initialData={initialData} />;
+    : { user: null, courses: [], total: 0 };
+  return <UserCoursesDetail userId={userId} initialData={initialData} page={page} />;
 }
+
+type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
 
 /**
  * Página de detalle de cursos por usuario.
  */
 export default async function UserCoursesPage(props: {
   params: Promise<{ userId: string }>;
+  searchParams: SearchParams;
 }) {
   const params = await props.params;
   const userId = parseInt(params.userId);
+  const resolvedSearchParams = await props.searchParams;
+  const currentPage = Number(resolvedSearchParams?.page) || 1;
 
   return (
     <section className="space-y-6">
@@ -36,12 +40,10 @@ export default async function UserCoursesPage(props: {
           { label: "Lista de cursos" },
         ]}
       />
-      <Title title="Cursos por usuario" />
-
       {/* Manejador de errores para el detalle de cursos */}
       <ErrorBoundary variant="compact" title="No se pudieron cargar los cursos">
-        <Suspense fallback={<UserCoursesDetailSkeleton />}>
-          <CoursesLoader userId={userId} />
+        <Suspense key={currentPage} fallback={<UserCoursesDetailSkeleton />}>
+          <CoursesLoader userId={userId} page={currentPage} />
         </Suspense>
       </ErrorBoundary>
     </section>

@@ -52,15 +52,95 @@ export function TableSkeleton({ rows = 3 }: { rows?: number }) {
   );
 }
 
-export function UserCoursesDetailSkeleton({ rows = 4 }: { rows?: number }) {
+export function UserCoursesDetailSkeleton({ rows = 6 }: { rows?: number }) {
   return (
-    <div className="space-y-6 animate-pulse">
-      <div className="h-4 w-64 rounded bg-black/10 dark:bg-white/10" />
-      <div className="flex items-center justify-between">
-        <div className="h-4 w-24 rounded bg-black/10 dark:bg-white/10" />
-        <div className="h-8 w-28 rounded-lg bg-black/10 dark:bg-white/10" />
+    <div className="space-y-8 animate-pulse">
+      {/* Header Skeleton */}
+      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+        <div className="space-y-2">
+          <div className="h-8 w-64 rounded bg-black/10 dark:bg-white/10" />
+          <div className="h-4 w-48 rounded bg-black/10 dark:bg-white/10" />
+          <div className="h-3 w-72 rounded bg-black/10 dark:bg-white/10" />
+        </div>
+        <div className="flex gap-3">
+          <div className="h-10 w-32 rounded-lg bg-black/10 dark:bg-white/10" />
+          <div className="h-10 w-32 rounded-lg bg-black/10 dark:bg-white/10" />
+        </div>
       </div>
-      <TableSkeleton rows={rows} />
+
+      <div className="flex items-center justify-between">
+        <div className="h-6 w-40 rounded bg-black/10 dark:bg-white/10" />
+        <div className="h-4 w-16 rounded bg-black/10 dark:bg-white/10" />
+      </div>
+
+      {/* Grid Skeleton */}
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {[...Array(rows)].map((_, i) => (
+          <div key={i} className="flex flex-col rounded-xl bg-surface-card p-5 h-56">
+            <div className="mb-5 flex items-start justify-between">
+              <div className="h-12 w-12 rounded-xl bg-black/10 dark:bg-white/10" />
+              <div className="flex gap-2">
+                <div className="h-8 w-8 rounded-lg bg-black/10 dark:bg-white/10" />
+                <div className="h-8 w-8 rounded-lg bg-black/10 dark:bg-white/10" />
+              </div>
+            </div>
+            <div className="h-5 w-3/4 rounded bg-black/10 dark:bg-white/10 mb-3" />
+            <div className="h-4 w-1/2 rounded bg-black/10 dark:bg-white/10 mb-auto" />
+            <div className="mt-auto flex items-center justify-between border-t border-black/6 pt-4 dark:border-white/8">
+              <div className="h-5 w-16 rounded-full bg-black/10 dark:bg-white/10" />
+              <div className="h-8 w-20 rounded-lg bg-black/10 dark:bg-white/10" />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export function UsersListSkeleton({ count = 4 }: { count?: number }) {
+  return (
+    <div className="flex flex-col gap-4 animate-pulse">
+      <div className="flex flex-col gap-4">
+        {[...Array(count)].map((_, i) => (
+          <div
+            key={i}
+            className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 card p-5 ghost-border"
+          >
+            {/* User Info */}
+            <div className="flex items-center gap-4 flex-1">
+              <div className="h-12 w-12 rounded-full bg-black/10 dark:bg-white/10" />
+              <div className="flex flex-col gap-2">
+                <div className="h-4 w-32 rounded bg-black/10 dark:bg-white/10" />
+                <div className="h-3 w-24 rounded bg-black/10 dark:bg-white/10" />
+              </div>
+            </div>
+
+            {/* Courses Count & Actions Wrapper */}
+            <div className="flex flex-row items-end sm:items-center justify-between w-full sm:flex-2 mt-4 sm:mt-0">
+              {/* Courses Count */}
+              <div className="flex flex-col sm:items-center justify-center flex-1 gap-2">
+                <div className="h-3 w-20 rounded bg-black/10 dark:bg-white/10" />
+                <div className="h-6 w-12 rounded bg-black/10 dark:bg-white/10" />
+              </div>
+
+              {/* Actions */}
+              <div className="flex justify-end flex-1">
+                <div className="h-10 w-32 rounded-lg bg-black/10 dark:bg-white/10" />
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+      
+      {/* Pagination Skeleton */}
+      <div className="flex items-center justify-between py-4 mt-2">
+        <div className="h-4 w-40 rounded bg-black/10 dark:bg-white/10" />
+        <div className="flex gap-1">
+          {[...Array(5)].map((_, j) => (
+            <div key={j} className="h-10 w-10 rounded-lg bg-black/10 dark:bg-white/10" />
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
