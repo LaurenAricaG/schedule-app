@@ -26,7 +26,7 @@ const CourseSchema = z.object({
  */
 export async function getUsersWithCoursesCount(
   page: number = 1,
-  limit: number = 10
+  limit: number = 10,
 ): Promise<ActionResult<any>> {
   try {
     const skip = (page - 1) * limit;
@@ -78,7 +78,7 @@ export async function getUsersWithCoursesCount(
 export async function getCoursesByUser(
   userId: number,
   page: number = 1,
-  limit: number = 6
+  limit: number = 6,
 ): Promise<GetCoursesByUserResponse> {
   try {
     const user = await prisma.user.findUnique({
@@ -100,7 +100,7 @@ export async function getCoursesByUser(
         skip,
         take: limit,
       }),
-      prisma.course.count({ where: { userId } })
+      prisma.course.count({ where: { userId } }),
     ]);
 
     return {
@@ -113,6 +113,43 @@ export async function getCoursesByUser(
     };
   } catch {
     return { success: false, error: "No se pudieron cargar los cursos" };
+  }
+}
+
+// ── Horario por usuario ────────────────────────────────
+/**
+ * Obtiene los horarios agrupados por día de un usuario específico.
+ * @param {number} userId - El ID del usuario.
+ * @returns {Promise<ActionResult>} Horarios agrupados por día de la semana.
+ */
+export async function getScheduleByUser(
+  userId: number,
+): Promise<ActionResult<any>> {
+  try {
+    const schedules = await prisma.schedule.findMany({
+      where: {
+        deletedAt: null,
+        course: {
+          userId,
+          deletedAt: null,
+        },
+      },
+      include: {
+        course: {
+          select: {
+            id: true,
+            name: true,
+            color: true,
+            teacher: true,
+          },
+        },
+      },
+      orderBy: [{ dayOfWeek: "asc" }, { startTime: "asc" }],
+    });
+
+    return { success: true, data: schedules };
+  } catch {
+    return { success: false, error: "No se pudo cargar el horario." };
   }
 }
 
