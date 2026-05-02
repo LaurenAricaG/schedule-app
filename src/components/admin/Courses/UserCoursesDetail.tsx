@@ -34,7 +34,7 @@ export default function UserCoursesDetail({
   return (
     <div className="space-y-8">
       {/* User Header */}
-      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+      <div className="flex flex-col lg:flex-row sm:items-start justify-between gap-4">
         <div>
           <Title
             title={`${view === "courses" ? "Cursos" : "Horario"} de ${initialData.user ? `${initialData.user.name} ${initialData.user.lastname}` : "Usuario"} `}
