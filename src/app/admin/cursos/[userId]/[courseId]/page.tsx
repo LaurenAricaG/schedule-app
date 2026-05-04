@@ -34,7 +34,7 @@ export default async function AdminCourseDetailPage({
         ]}
       />
 
-      <div className="card p-10 flex flex-col items-center justify-center text-center space-y-4 ghost-border border-primary/20 bg-primary/[0.02]">
+      <div className="card p-10 flex flex-col items-center justify-center text-center space-y-4 ghost-border border-primary/20 bg-primary/2">
         <div className="h-16 w-16 bg-primary/10 text-primary rounded-2xl flex items-center justify-center">
           <FiActivity size={32} />
         </div>
