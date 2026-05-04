@@ -18,10 +18,12 @@ interface UsersCoursesListProps {
  * Componente que muestra una lista de usuarios y la cantidad de cursos que tienen asignados.
  * Es un Server Component asÃ­ncrono que obtiene sus propios datos.
  */
-export default async function UsersCoursesList({ page = 1 }: UsersCoursesListProps) {
+export default async function UsersCoursesList({
+  page = 1,
+}: UsersCoursesListProps) {
   const limit = 4; // Based on the image showing 1-4
   const result = await getUsersWithCoursesCount(page, limit);
-  
+
   const initialUsers: UserWithCourseCount[] = result.success
     ? (result.data?.users ?? [])
     : [];
@@ -64,11 +66,11 @@ export default async function UsersCoursesList({ page = 1 }: UsersCoursesListPro
               {/* Courses Count */}
               <div className="flex flex-col sm:items-center justify-center flex-1">
                 <span className="text-[10px] font-bold uppercase tracking-widest text-foreground-muted mb-1">
-                  NÂ° cursos
+                  N° cursos
                 </span>
                 <div className="flex items-center gap-1.5">
                   <span className="text-xl font-bold text-foreground">
-                    {user._count.courses.toString().padStart(2, '0')}
+                    {user._count.courses.toString().padStart(2, "0")}
                   </span>
                   <FiBook className="h-4 w-4 text-primary dark:text-primary-container" />
                 </div>

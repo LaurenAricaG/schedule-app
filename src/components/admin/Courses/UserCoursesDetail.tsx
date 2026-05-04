@@ -46,12 +46,12 @@ export default function UserCoursesDetail({
         <div className="flex flex-wrap gap-3">
           <button
             onClick={() => setView(view === "courses" ? "schedule" : "courses")}
-            className="inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-white hover:bg-primary/90 transition-colors ghost-border cursor-pointer"
+            className="inline-flex items-center gap-2 rounded-lg bg-primary px-2.5 md:px-5 py-2.5 text-sm font-semibold text-white hover:bg-primary/90 transition-colors ghost-border cursor-pointer"
           >
             <FiCalendar />
             {view === "courses" ? "Ver Horario" : "Ver Cursos"}
           </button>
-          <button className="inline-flex items-center gap-2 rounded-lg border border-black/10 dark:border-white/10 bg-surface-card px-5 py-2.5 text-sm font-semibold text-primary hover:bg-surface-low transition-colors ghost-border cursor-pointer">
+          <button className="inline-flex items-center gap-2 rounded-lg border border-black/10 dark:border-white/10 bg-surface-card px-2.5 md:px-5 py-2.5 text-sm font-semibold text-primary hover:bg-surface-low transition-colors ghost-border cursor-pointer">
             <FiPlus />
             {view === "courses" ? "Nuevo curso" : "Añadir horario"}
           </button>
@@ -87,7 +87,11 @@ export default function UserCoursesDetail({
           )}
         </>
       ) : (
-        <UserSchedule userId={userId} />
+        <UserSchedule
+          userId={userId}
+          userName={initialData.user?.name ?? ""}
+          userLastname={initialData.user?.lastname ?? ""}
+        />
       )}
     </div>
   );
