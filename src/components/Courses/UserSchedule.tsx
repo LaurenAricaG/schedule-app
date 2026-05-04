@@ -3,6 +3,7 @@
 import { getScheduleByUser } from "@/lib/courses";
 import { cn } from "@/utils/cn.utils";
 import { useEffect, useState } from "react";
+import { ScheduleCardSkeleton } from "@/components/ui/Skeletons";
 
 type ScheduleItem = {
   id: number;
@@ -242,6 +243,10 @@ export default function UserSchedule({
       color: s.course.color ?? "#888888",
     }));
 
+  if (loading) {
+    return <ScheduleCardSkeleton />;
+  }
+
   return (
     <>
       {/* ── Modal exportando ────────────────────────────── */}
@@ -327,18 +332,8 @@ export default function UserSchedule({
           })}
         </div>
 
-        {/* ── Contenido móvil (< lg) ──────────────────────── */}
         <div className="lg:hidden">
-          {loading ? (
-            <div className="space-y-3">
-              {[1, 2].map((i) => (
-                <div
-                  key={i}
-                  className="h-20 bg-surface-low rounded-xl animate-pulse"
-                />
-              ))}
-            </div>
-          ) : classes.length === 0 ? (
+          {classes.length === 0 ? (
             <p className="text-sm text-foreground-muted text-center py-8">
               Sin clases este día
             </p>
@@ -425,9 +420,7 @@ export default function UserSchedule({
                   </div>
 
                   <div className="flex flex-col gap-3">
-                    {loading ? (
-                      <div className="h-24 bg-surface-low rounded-xl animate-pulse" />
-                    ) : dayClasses.length === 0 ? (
+                    {dayClasses.length === 0 ? (
                       <p className="text-xs text-foreground-muted text-center py-4">
                         —
                       </p>

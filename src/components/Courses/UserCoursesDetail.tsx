@@ -8,6 +8,7 @@ import CardCourse from "./CardCourse";
 import { useRouter } from "next/navigation";
 import UserSchedule from "./UserSchedule";
 import Title from "@/components/ui/Title";
+import Link from "next/link";
 
 type CoursesByUserResponse = {
   user: Partial<User> | null;
@@ -19,12 +20,22 @@ export default function UserCoursesDetail({
   userId,
   initialData,
   page = 1,
+  isAdmin = false,
+  isRouted = false,
+  initialView = "courses",
+  scheduleHref = "/panel/horario",
+  coursesHref = "/panel/cursos",
 }: {
   userId: number;
   initialData: CoursesByUserResponse;
   page?: number;
+  isAdmin?: boolean;
+  isRouted?: boolean;
+  initialView?: "courses" | "schedule";
+  scheduleHref?: string;
+  coursesHref?: string;
 }) {
-  const [view, setView] = useState<"courses" | "schedule">("courses");
+  const [view, setView] = useState<"courses" | "schedule">(initialView);
   const router = useRouter();
 
   const totalItems = initialData.total || 0;
@@ -37,24 +48,38 @@ export default function UserCoursesDetail({
       <div className="flex flex-col lg:flex-row sm:items-start justify-between gap-4">
         <div>
           <Title
-            title={`${view === "courses" ? "Cursos" : "Horario"} de ${initialData.user ? `${initialData.user.name} ${initialData.user.lastname}` : "Usuario"} `}
+            title={`${view === "courses" ? "Cursos" : "Horario"} ${isAdmin ? `de ${initialData.user ? `${initialData.user.name} ${initialData.user.lastname}` : "Usuario"}` : "Asignados"}`}
           />
-          <p className="text-foreground-muted mt-2">
-            {initialData.user?.email}
-          </p>
+          {isAdmin && (
+            <p className="text-foreground-muted mt-2">
+              {initialData.user?.email}
+            </p>
+          )}
         </div>
         <div className="flex flex-wrap gap-3">
-          <button
-            onClick={() => setView(view === "courses" ? "schedule" : "courses")}
-            className="inline-flex items-center gap-2 rounded-lg bg-primary px-2.5 md:px-5 py-2.5 text-sm font-semibold text-white hover:bg-primary/90 transition-colors ghost-border cursor-pointer"
-          >
-            <FiCalendar />
-            {view === "courses" ? "Ver Horario" : "Ver Cursos"}
-          </button>
-          <button className="inline-flex items-center gap-2 rounded-lg border border-black/10 dark:border-white/10 bg-surface-card px-2.5 md:px-5 py-2.5 text-sm font-semibold text-primary hover:bg-surface-low transition-colors ghost-border cursor-pointer">
-            <FiPlus />
-            {view === "courses" ? "Nuevo curso" : "Añadir horario"}
-          </button>
+          {isRouted ? (
+            <Link
+              href={view === "courses" ? scheduleHref : coursesHref}
+              className="inline-flex items-center gap-2 rounded-lg bg-primary px-2.5 md:px-5 py-2.5 text-sm font-semibold text-white hover:bg-primary/90 transition-colors ghost-border cursor-pointer"
+            >
+              <FiCalendar />
+              {view === "courses" ? "Ver Horario" : "Ver Cursos"}
+            </Link>
+          ) : (
+            <button
+              onClick={() => setView(view === "courses" ? "schedule" : "courses")}
+              className="inline-flex items-center gap-2 rounded-lg bg-primary px-2.5 md:px-5 py-2.5 text-sm font-semibold text-white hover:bg-primary/90 transition-colors ghost-border cursor-pointer"
+            >
+              <FiCalendar />
+              {view === "courses" ? "Ver Horario" : "Ver Cursos"}
+            </button>
+          )}
+          {isAdmin && (
+            <button className="inline-flex items-center gap-2 rounded-lg border border-black/10 dark:border-white/10 bg-surface-card px-2.5 md:px-5 py-2.5 text-sm font-semibold text-primary hover:bg-surface-low transition-colors ghost-border cursor-pointer">
+              <FiPlus />
+              {view === "courses" ? "Nuevo curso" : "Añadir horario"}
+            </button>
+          )}
         </div>
       </div>
 
@@ -67,6 +92,7 @@ export default function UserCoursesDetail({
                   key={course.id}
                   course={course}
                   onSuccess={() => router.refresh()}
+                  isAdmin={isAdmin}
                 />
               ))}
             </div>

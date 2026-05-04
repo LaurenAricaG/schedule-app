@@ -6,12 +6,14 @@ declare module "next-auth" {
     username: string;
     rol: string;
     rolId: number;
+    lastname: string | null;
   }
 
   interface Session {
     user: {
       id: string;
       name: string;
+      lastname: string | null;
       email: string;
       username: string;
       rol: string;
@@ -26,5 +28,6 @@ declare module "next-auth/jwt" {
     username: string;
     rol: string;
     rolId: number;
+    lastname: string | null;
   }
 }

@@ -1,4 +1,3 @@
-// components/admin/Courses/CardCourse.tsx
 "use client";
 
 import { useState, useTransition } from "react";
@@ -15,9 +14,10 @@ import Link from "next/link";
 type CardCourseProps = {
   course: Course;
   onSuccess: () => void;
+  isAdmin?: boolean;
 };
 
-export default function CardCourse({ course, onSuccess }: CardCourseProps) {
+export default function CardCourse({ course, onSuccess, isAdmin = false }: CardCourseProps) {
   const [isPending, startTransition] = useTransition();
   const [confirmOpen, setConfirmOpen] = useState(false);
   const deleted = course.deletedAt !== null;
@@ -84,27 +84,29 @@ export default function CardCourse({ course, onSuccess }: CardCourseProps) {
             <FiBook size={20} />
           </span>
 
-          <div className="flex gap-1">
-            <ActionButton onClick={() => {}}>
-              <FiEdit2 size={13} />
-            </ActionButton>
+          {isAdmin && (
+            <div className="flex gap-1">
+              <ActionButton onClick={() => {}}>
+                <FiEdit2 size={13} />
+              </ActionButton>
 
-            {deleted ? (
-              <ActionButton
-                onClick={handleRestore}
-                className="text-success hover:bg-success/10"
-              >
-                <FiRotateCcw size={13} />
-              </ActionButton>
-            ) : (
-              <ActionButton
-                onClick={() => setConfirmOpen(true)}
-                className="text-error hover:bg-error/10"
-              >
-                <FiTrash2 size={13} />
-              </ActionButton>
-            )}
-          </div>
+              {deleted ? (
+                <ActionButton
+                  onClick={handleRestore}
+                  className="text-success hover:bg-success/10"
+                >
+                  <FiRotateCcw size={13} />
+                </ActionButton>
+              ) : (
+                <ActionButton
+                  onClick={() => setConfirmOpen(true)}
+                  className="text-error hover:bg-error/10"
+                >
+                  <FiTrash2 size={13} />
+                </ActionButton>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Body */}
@@ -134,16 +136,28 @@ export default function CardCourse({ course, onSuccess }: CardCourseProps) {
           )}
         >
           <StatusBadge active={!deleted} />
-          <Link href={`/admin/cursos/curso/${course.id}`}>
-            <button 
+          <Link
+            href={
+              isAdmin
+                ? `/admin/cursos/${course.userId}/${course.id}`
+                : `/panel/cursos/${course.id}`
+            }
+          >
+            <button
               className={cn(
                 "inline-flex items-center gap-2 rounded-lg px-4 py-2 text-xs font-semibold transition-colors cursor-pointer",
-                deleted && "bg-primary/10 text-primary hover:bg-primary/20 dark:bg-primary/20 dark:text-primary-container dark:hover:bg-primary/30"
+                deleted &&
+                  "bg-primary/10 text-primary hover:bg-primary/20 dark:bg-primary/20 dark:text-primary-container dark:hover:bg-primary/30",
               )}
-              style={!deleted ? { 
-                backgroundColor: "color-mix(in srgb, var(--course-color) 10%, transparent)",
-                color: "var(--course-color)" 
-              } : undefined}
+              style={
+                !deleted
+                  ? {
+                      backgroundColor:
+                        "color-mix(in srgb, var(--course-color) 10%, transparent)",
+                      color: "var(--course-color)",
+                    }
+                  : undefined
+              }
             >
               Gestionar
             </button>
