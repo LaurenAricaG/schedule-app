@@ -51,6 +51,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         return {
           id: String(user.id),
           name: user.name,
+          lastname: user.lastname,
           email: user.email,
           username: user.username,
           rol: user.rol.rol,
@@ -67,6 +68,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         token.username = user.username ?? "";
         token.rol = user.rol ?? "";
         token.rolId = user.rolId ?? 0;
+        token.lastname = (user as any).lastname ?? "";
       }
       return token;
     },
@@ -75,6 +77,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       session.user.username = token.username as string;
       session.user.rol = token.rol as string;
       session.user.rolId = token.rolId as number;
+      session.user.lastname = token.lastname as string;
       return session;
     },
   },

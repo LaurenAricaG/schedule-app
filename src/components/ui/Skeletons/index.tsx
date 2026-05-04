@@ -1,3 +1,5 @@
+import React from "react";
+
 export function RolesSkeleton({ count = 4 }: { count?: number }) {
   return (
     <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
@@ -144,3 +146,61 @@ export function UsersListSkeleton({ count = 4 }: { count?: number }) {
     </div>
   );
 }
+
+export function ScheduleCardSkeleton() {
+  return (
+    <div className="card p-6 ghost-border animate-pulse">
+      {/* UserSchedule Header Placeholder */}
+      <div className="flex items-center justify-between mb-6">
+        <div className="space-y-2">
+          <div className="h-6 w-24 rounded bg-black/10 dark:bg-white/10" />
+          <div className="h-4 w-16 rounded bg-black/10 dark:bg-white/10" />
+        </div>
+        <div className="h-9 w-32 rounded-lg bg-black/10 dark:bg-white/10" />
+      </div>
+
+      {/* Days Header Placeholder (Desktop) */}
+      <div className="hidden lg:grid grid-cols-5 gap-4">
+        {[...Array(5)].map((_, i) => (
+          <div key={i} className="flex flex-col gap-3">
+            <div className="h-16 w-full rounded-xl bg-black/5 dark:bg-white/5 mb-3" />
+            {[...Array(6)].map((_, j) => (
+              <div key={j} className="h-24 w-full rounded-xl bg-black/10 dark:bg-white/10" />
+            ))}
+          </div>
+        ))}
+      </div>
+      
+      {/* Mobile skeleton placeholder */}
+      <div className="lg:hidden space-y-4">
+        <div className="grid grid-cols-5 gap-2">
+           {[...Array(5)].map((_, i) => <div key={i} className="h-12 rounded-xl bg-black/10 dark:bg-white/10" />)}
+        </div>
+        {[...Array(6)].map((_, i) => (
+          <div key={i} className="h-24 w-full rounded-xl bg-black/10 dark:bg-white/10" />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export function ScheduleSkeleton() {
+  return (
+    <div className="space-y-8 animate-pulse">
+      {/* UserCoursesDetail Header Placeholder */}
+      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+        <div className="space-y-2">
+          <div className="h-9 w-48 rounded-lg bg-black/10 dark:bg-white/10" />
+        </div>
+        <div className="flex gap-3">
+          <div className="h-10 w-32 rounded-lg bg-black/10 dark:bg-white/10" />
+        </div>
+      </div>
+
+      <ScheduleCardSkeleton />
+    </div>
+  );
+}
+
+
+

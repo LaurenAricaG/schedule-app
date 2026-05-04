@@ -257,3 +257,33 @@ export async function restoreCourse(id: number): Promise<ActionResult> {
     return { success: false, error: "No se pudo restaurar el curso." };
   }
 }
+// ── Leer curso por ID ──────────────────────────────────
+/**
+ * Obtiene los detalles de un curso específico por su ID.
+ * @param {number} id - El ID del curso.
+ * @returns {Promise<ActionResult<Course>>} Resultado con los datos del curso.
+ */
+export async function getCourseById(id: number): Promise<ActionResult<any>> {
+  try {
+    const course = await prisma.course.findUnique({
+      where: { id },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            lastname: true,
+          },
+        },
+      },
+    });
+
+    if (!course) {
+      return { success: false, error: "Curso no encontrado" };
+    }
+
+    return { success: true, data: course };
+  } catch {
+    return { success: false, error: "Error al obtener el curso" };
+  }
+}
