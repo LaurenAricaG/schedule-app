@@ -1,31 +1,42 @@
+import { Suspense } from "react";
 import { auth } from "@/lib/auth";
 import { getCourseById } from "@/lib/courses";
+import { getTasksByCourseId } from "@/lib/tasks";
 import { redirect } from "next/navigation";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
+import { TaskList } from "@/components/tasks/TaskList";
+import { TasksSkeleton } from "@/components/ui/Skeletons";
 import { FiActivity } from "react-icons/fi";
 
 export default async function CourseDetailPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ courseId: string }>;
+  searchParams: Promise<{ page?: string; tab?: string }>;
 }) {
   const session = await auth();
   if (!session) redirect("/login");
 
   const { courseId } = await params;
+  const { page: pageStr, tab = "active" } = await searchParams;
   
-  // Obtenemos los datos del curso para saber a quién pertenece
-  const result = await getCourseById(parseInt(courseId));
+  const id = parseInt(courseId);
+  const page = parseInt(pageStr || "1");
   
-  if (!result.success || !result.data) {
+  const [courseResult, tasksResult] = await Promise.all([
+    getCourseById(id),
+    getTasksByCourseId(id, page, 6, tab)
+  ]);
+  
+  if (!courseResult.success || !courseResult.data) {
     redirect("/panel/cursos");
   }
 
-  const course = result.data;
+  const course = courseResult.data;
+  const tasksData = tasksResult.success ? tasksResult : { data: [], totalPages: 1, totalTasks: 0 };
   
-  // Verificamos si el usuario logueado es el dueño del curso
   const isOwner = String(session.user.id) === String(course.user.id);
-  const studentName = `${course.user.name} ${course.user.lastname}`;
 
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
@@ -37,32 +48,53 @@ export default async function CourseDetailPage({
         ]}
       />
 
-      <div className="card p-10 flex flex-col items-center justify-center text-center space-y-4 ghost-border">
-        <div className="h-16 w-16 bg-primary/10 text-primary rounded-2xl flex items-center justify-center">
-          <FiActivity size={32} />
-        </div>
-        <div className="space-y-1">
-          <h1 className="text-3xl font-bold text-foreground">
-            {isOwner ? "Mis actividades" : `Actividades de ${course.user.name}`}
-          </h1>
-          <p className="text-lg text-foreground-muted">
-            Curso: <span className="font-bold text-primary">{course.name}</span>
-          </p>
-          {!isOwner && (
-            <p className="text-sm font-medium text-foreground-muted mt-2">
-              Estudiante: <span className="text-foreground">{studentName}</span>
-            </p>
-          )}
-        </div>
+      {/* Course Header */}
+      <div 
+        className="card p-8 flex flex-col md:flex-row md:items-center justify-between gap-6 overflow-hidden relative"
+        style={{ borderColor: `${course.color}33` }}
+      >
+        <div 
+          className="absolute top-0 right-0 w-32 h-32 -mr-16 -mt-16 rounded-full blur-3xl opacity-10"
+          style={{ backgroundColor: course.color || 'var(--primary)' }}
+        />
         
-        <div className="pt-6 w-full max-w-md">
-          <div className="p-8 border-2 border-dashed border-black/5 rounded-3xl dark:border-white/5 flex flex-col items-center gap-3">
-             <div className="h-2 w-24 bg-black/5 dark:bg-white/5 rounded-full" />
-             <p className="text-sm text-foreground-muted font-medium">
-               Aún no hay actividades registradas para este curso.
-             </p>
+        <div className="flex items-center gap-5 relative z-10">
+          <div 
+            className="h-16 w-16 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-black/5"
+            style={{ backgroundColor: course.color || 'var(--primary)' }}
+          >
+            <FiActivity size={32} />
+          </div>
+          <div className="space-y-1">
+            <h1 className="text-3xl font-bold text-foreground">
+              {course.name}
+            </h1>
+            <p className="text-foreground-muted">
+              Profesor: <span className="font-semibold text-foreground">{course.teacher}</span>
+            </p>
           </div>
         </div>
+
+        <div className="flex flex-col items-end gap-2 relative z-10">
+          {isOwner && (
+            <span className="text-xs text-primary font-bold tracking-wider uppercase">
+              Tu curso personal
+            </span>
+          )}
+        </div>
+      </div>
+
+      {/* Task Section */}
+      <div className="space-y-4">
+        <Suspense key={`${id}-${page}-${tab}`} fallback={<TasksSkeleton />}>
+          <TaskList 
+            courseId={id} 
+            initialTasks={tasksData.data || []}
+            totalPages={tasksData.totalPages || 1}
+            currentPage={page}
+            totalTasks={tasksData.totalTasks || 0}
+          />
+        </Suspense>
       </div>
     </div>
   );
