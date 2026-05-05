@@ -27,8 +27,8 @@ export default async function AdminCourseDetailPage({
     <div className="space-y-6 animate-in fade-in duration-500">
       <Breadcrumbs
         items={[
-          { label: "Administración", href: "/admin" },
-          { label: "Gestión de Cursos", href: "/admin/cursos" },
+          { label: "Admin", href: "/admin" },
+          { label: "Cursos", href: "/admin/cursos" },
           { label: studentName, href: `/admin/cursos/${userId}` },
           { label: course.name },
         ]}

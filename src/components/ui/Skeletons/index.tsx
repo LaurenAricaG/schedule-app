@@ -202,5 +202,50 @@ export function ScheduleSkeleton() {
   );
 }
 
+export function TasksSkeleton({ count = 6 }: { count?: number }) {
+  return (
+    <div className="space-y-6 animate-pulse">
+      {/* Header & Controls Skeleton */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="h-10 w-64 rounded-xl bg-black/10 dark:bg-white/10" />
+        <div className="h-10 w-36 rounded-lg bg-black/10 dark:bg-white/10" />
+      </div>
+
+      {/* Task List Skeleton */}
+      <div className="grid gap-3">
+        {[...Array(count)].map((_, i) => (
+          <div
+            key={i}
+            className="flex items-center gap-4 p-4 rounded-2xl border border-black/5 dark:border-white/5 bg-surface-card/50"
+          >
+            <div className="h-6 w-6 rounded-full bg-black/10 dark:bg-white/10" />
+            <div className="grow space-y-2">
+              <div className="h-4 w-1/2 rounded bg-black/10 dark:bg-white/10" />
+              <div className="h-3 w-1/4 rounded bg-black/10 dark:bg-white/10" />
+            </div>
+            <div className="flex gap-2">
+              <div className="h-8 w-8 rounded-lg bg-black/10 dark:bg-white/10" />
+              <div className="h-8 w-8 rounded-lg bg-black/10 dark:bg-white/10" />
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Pagination Skeleton */}
+      <div className="flex items-center justify-between py-4 mt-2">
+        <div className="h-4 w-40 rounded bg-black/10 dark:bg-white/10" />
+        <div className="flex gap-1">
+          {[...Array(3)].map((_, j) => (
+            <div
+              key={j}
+              className="h-10 w-10 rounded-lg bg-black/10 dark:bg-white/10"
+            />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 
 
