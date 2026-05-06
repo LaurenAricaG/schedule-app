@@ -95,6 +95,8 @@ export type UserWithCourses = UserWithRole & {
   courses: CourseWithSchedules[];
 };
 
+export type UserDTO = Omit<User, "password" | "createdAt" | "deletedAt">;
+
 export type CreateUserDTO = {
   name: string;
   lastname?: string;
