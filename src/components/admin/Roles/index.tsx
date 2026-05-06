@@ -14,11 +14,11 @@ const RolesList = async () => {
   }
 
   return (
-    <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+    <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
       {roles.map((role) => (
         <CardRoles key={role.id} role={role} />
       ))}
-    </section>
+    </div>
   );
 };
 

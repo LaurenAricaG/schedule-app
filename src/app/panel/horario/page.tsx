@@ -12,12 +12,12 @@ async function ScheduleLoader({ userId }: { userId: number }) {
   const initialData = result.success
     ? result.data
     : { user: null, courses: [], total: 0 };
-  
+
   return (
-    <UserCoursesDetail 
-      userId={userId} 
-      initialData={initialData} 
-      isAdmin={false} 
+    <UserCoursesDetail
+      userId={userId}
+      initialData={initialData}
+      isAdmin={false}
       isRouted={true}
       initialView="schedule"
     />
@@ -31,19 +31,16 @@ export default async function PanelSchedulePage() {
   const userId = parseInt(session.user.id);
 
   return (
-    <div className="space-y-6">
+    <section className="space-y-6">
       <Breadcrumbs
-        items={[
-          { label: "Panel", href: "/panel" },
-          { label: "Mi Horario" },
-        ]}
+        items={[{ label: "Panel", href: "/panel" }, { label: "Mi Horario" }]}
       />
-      
+
       <ErrorBoundary variant="compact" title="No se pudo cargar el horario">
         <Suspense fallback={<ScheduleSkeleton />}>
           <ScheduleLoader userId={userId} />
         </Suspense>
       </ErrorBoundary>
-    </div>
+    </section>
   );
 }

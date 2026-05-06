@@ -60,23 +60,25 @@ export default function UserCoursesDetail({
           {isRouted ? (
             <Link
               href={view === "courses" ? scheduleHref : coursesHref}
-              className="inline-flex items-center gap-2 rounded-lg bg-primary px-2.5 md:px-5 py-2.5 text-sm font-semibold text-white hover:bg-primary/90 transition-colors ghost-border cursor-pointer"
+              className="inline-flex items-center gap-2 rounded-lg border border-black/10 dark:border-white/10 bg-surface-card px-2.5 md:px-5 py-2.5 text-sm font-semibold text-primary hover:bg-surface-low transition-colors ghost-border cursor-pointer"
             >
               <FiCalendar />
               {view === "courses" ? "Ver Horario" : "Ver Cursos"}
             </Link>
           ) : (
             <button
-              onClick={() => setView(view === "courses" ? "schedule" : "courses")}
-              className="inline-flex items-center gap-2 rounded-lg bg-primary px-2.5 md:px-5 py-2.5 text-sm font-semibold text-white hover:bg-primary/90 transition-colors ghost-border cursor-pointer"
+              onClick={() =>
+                setView(view === "courses" ? "schedule" : "courses")
+              }
+              className="inline-flex items-center gap-2 rounded-lg border border-black/10 dark:border-white/10 bg-surface-card px-2.5 md:px-5 py-2.5 text-sm font-semibold text-primary hover:bg-surface-low transition-colors ghost-border cursor-pointer"
             >
               <FiCalendar />
               {view === "courses" ? "Ver Horario" : "Ver Cursos"}
             </button>
           )}
           {isAdmin && (
-            <button className="inline-flex items-center gap-2 rounded-lg border border-black/10 dark:border-white/10 bg-surface-card px-2.5 md:px-5 py-2.5 text-sm font-semibold text-primary hover:bg-surface-low transition-colors ghost-border cursor-pointer">
-              <FiPlus />
+            <button className="inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-white hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 ghost-border cursor-pointer">
+              <FiPlus size={18} />
               {view === "courses" ? "Nuevo curso" : "Añadir horario"}
             </button>
           )}
