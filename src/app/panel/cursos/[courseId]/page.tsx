@@ -20,26 +20,28 @@ export default async function CourseDetailPage({
 
   const { courseId } = await params;
   const { page: pageStr, tab = "active" } = await searchParams;
-  
+
   const id = parseInt(courseId);
   const page = parseInt(pageStr || "1");
-  
+
   const [courseResult, tasksResult] = await Promise.all([
     getCourseById(id),
-    getTasksByCourseId(id, page, 6, tab)
+    getTasksByCourseId(id, page, 6, tab),
   ]);
-  
+
   if (!courseResult.success || !courseResult.data) {
     redirect("/panel/cursos");
   }
 
   const course = courseResult.data;
-  const tasksData = tasksResult.success ? tasksResult : { data: [], totalPages: 1, totalTasks: 0 };
-  
+  const tasksData = tasksResult.success
+    ? tasksResult
+    : { data: [], totalPages: 1, totalTasks: 0 };
+
   const isOwner = String(session.user.id) === String(course.user.id);
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-500">
+    <section className="space-y-6 animate-in fade-in duration-500">
       <Breadcrumbs
         items={[
           { label: "Panel", href: "/panel" },
@@ -49,19 +51,19 @@ export default async function CourseDetailPage({
       />
 
       {/* Course Header */}
-      <div 
+      <div
         className="card p-8 flex flex-col md:flex-row md:items-center justify-between gap-6 overflow-hidden relative"
         style={{ borderColor: `${course.color}33` }}
       >
-        <div 
+        <div
           className="absolute top-0 right-0 w-32 h-32 -mr-16 -mt-16 rounded-full blur-3xl opacity-10"
-          style={{ backgroundColor: course.color || 'var(--primary)' }}
+          style={{ backgroundColor: course.color || "var(--primary)" }}
         />
-        
+
         <div className="flex items-center gap-5 relative z-10">
-          <div 
+          <div
             className="h-16 w-16 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-black/5"
-            style={{ backgroundColor: course.color || 'var(--primary)' }}
+            style={{ backgroundColor: course.color || "var(--primary)" }}
           >
             <FiActivity size={32} />
           </div>
@@ -70,7 +72,10 @@ export default async function CourseDetailPage({
               {course.name}
             </h1>
             <p className="text-foreground-muted">
-              Profesor: <span className="font-semibold text-foreground">{course.teacher}</span>
+              Profesor:{" "}
+              <span className="font-semibold text-foreground">
+                {course.teacher}
+              </span>
             </p>
           </div>
         </div>
@@ -87,8 +92,8 @@ export default async function CourseDetailPage({
       {/* Task Section */}
       <div className="space-y-4">
         <Suspense key={`${id}-${page}-${tab}`} fallback={<TasksSkeleton />}>
-          <TaskList 
-            courseId={id} 
+          <TaskList
+            courseId={id}
             initialTasks={tasksData.data || []}
             totalPages={tasksData.totalPages || 1}
             currentPage={page}
@@ -96,6 +101,6 @@ export default async function CourseDetailPage({
           />
         </Suspense>
       </div>
-    </div>
+    </section>
   );
 }

@@ -24,7 +24,7 @@ export default async function AdminCourseDetailPage({
   const studentName = `${course.user.name} ${course.user.lastname}`;
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-500">
+    <section className="space-y-6 animate-in fade-in duration-500">
       <Breadcrumbs
         items={[
           { label: "Admin", href: "/admin" },
@@ -49,16 +49,16 @@ export default async function AdminCourseDetailPage({
             Modo Administrador
           </div>
         </div>
-        
+
         <div className="pt-6 w-full max-w-md">
           <div className="p-8 border-2 border-dashed border-primary/10 rounded-3xl flex flex-col items-center gap-3">
-             <div className="h-2 w-24 bg-primary/5 rounded-full" />
-             <p className="text-sm text-foreground-muted font-medium">
-               Como administrador, pronto podrás asignar y calificar tareas aquí.
-             </p>
+            <div className="h-2 w-24 bg-primary/5 rounded-full" />
+            <p className="text-sm text-foreground-muted font-medium">
+              Como administrador, pronto podrás asignar y calificar tareas aquí.
+            </p>
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 }
