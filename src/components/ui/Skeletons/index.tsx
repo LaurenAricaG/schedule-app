@@ -1,8 +1,6 @@
-import React from "react";
-
 export function RolesSkeleton({ count = 4 }: { count?: number }) {
   return (
-    <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+    <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
       {[...Array(count)].map((_, i) => (
         <article
           key={i}
@@ -20,7 +18,7 @@ export function RolesSkeleton({ count = 4 }: { count?: number }) {
           </div>
         </article>
       ))}
-    </section>
+    </div>
   );
 }
 
@@ -165,19 +163,30 @@ export function ScheduleCardSkeleton() {
           <div key={i} className="flex flex-col gap-3">
             <div className="h-16 w-full rounded-xl bg-black/5 dark:bg-white/5 mb-3" />
             {[...Array(6)].map((_, j) => (
-              <div key={j} className="h-24 w-full rounded-xl bg-black/10 dark:bg-white/10" />
+              <div
+                key={j}
+                className="h-24 w-full rounded-xl bg-black/10 dark:bg-white/10"
+              />
             ))}
           </div>
         ))}
       </div>
-      
+
       {/* Mobile skeleton placeholder */}
       <div className="lg:hidden space-y-4">
         <div className="grid grid-cols-5 gap-2">
-           {[...Array(5)].map((_, i) => <div key={i} className="h-12 rounded-xl bg-black/10 dark:bg-white/10" />)}
+          {[...Array(5)].map((_, i) => (
+            <div
+              key={i}
+              className="h-12 rounded-xl bg-black/10 dark:bg-white/10"
+            />
+          ))}
         </div>
         {[...Array(6)].map((_, i) => (
-          <div key={i} className="h-24 w-full rounded-xl bg-black/10 dark:bg-white/10" />
+          <div
+            key={i}
+            className="h-24 w-full rounded-xl bg-black/10 dark:bg-white/10"
+          />
         ))}
       </div>
     </div>
@@ -246,6 +255,3 @@ export function TasksSkeleton({ count = 6 }: { count?: number }) {
     </div>
   );
 }
-
-
-
