@@ -2,7 +2,7 @@
 
 import { ActionButton } from "@/components/ui/ActionButton";
 import { ConfirmModal } from "@/components/ui/ConfirmModal";
-import { deleteUser, restoreUser } from "@/lib/users";
+import { deleteUser, restoreUser } from "@/lib/users/actions";
 import { UserWithRolDTO } from "@/types/definitions";
 import { cn } from "@/utils/cn.utils";
 import { useState, useTransition } from "react";

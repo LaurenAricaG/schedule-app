@@ -8,7 +8,7 @@ import { ActionButton } from "@/components/ui/ActionButton";
 import { FiEdit2, FiTrash2, FiRotateCcw, FiBook } from "react-icons/fi";
 import { toast } from "sonner";
 import { cn } from "@/utils/cn.utils";
-import { deleteCourse, restoreCourse } from "@/lib/courses";
+import { deleteCourse, restoreCourse } from "@/lib/courses/actions";
 import Link from "next/link";
 
 type CardCourseProps = {
