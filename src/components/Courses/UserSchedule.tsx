@@ -1,6 +1,6 @@
 "use client";
 
-import { getScheduleByUser } from "@/lib/courses";
+import { getScheduleByUser } from "@/lib/courses/actions";
 import { cn } from "@/utils/cn.utils";
 import { useEffect, useState } from "react";
 import { ScheduleCardSkeleton } from "@/components/ui/Skeletons";

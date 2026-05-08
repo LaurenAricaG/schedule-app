@@ -3,14 +3,13 @@
 import { ActionButton } from "@/components/ui/ActionButton";
 import { ConfirmModal } from "@/components/ui/ConfirmModal";
 import { StatusBadge } from "@/components/ui/StatusBadge";
-import { deleteRole, restoreRole } from "@/lib/roles";
+import { deleteRole, restoreRole } from "@/lib/roles/actions";
 import { Role } from "@/types/definitions";
 import { cn } from "@/utils/cn.utils";
 import { useState, useTransition } from "react";
 import { FaUserCog, FaUserGraduate } from "react-icons/fa";
 import { toast } from "sonner";
 import {
-  FiEdit2,
   FiTrash2,
   FiRotateCcw,
   FiBookOpen,
@@ -91,9 +90,6 @@ const CardRoles = ({
           </span>
 
           <div className="flex gap-1">
-            <ActionButton onClick={() => {}}>
-              <FiEdit2 size={13} />
-            </ActionButton>
 
             {deleted ? (
               <ActionButton
