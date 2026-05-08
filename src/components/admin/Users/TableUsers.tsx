@@ -36,7 +36,7 @@ function UserAvatar({
   };
 
   return (
-    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-(--course-6)/20 text-sm font-semibold text-course-6">
+    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-avatar/20 text-sm font-semibold text-avatar">
       <span className="font-bold">{getInitials()}</span>
     </div>
   );
