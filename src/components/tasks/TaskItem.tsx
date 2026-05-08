@@ -10,12 +10,12 @@ import { cn } from "@/utils/cn.utils";
 interface TaskItemProps {
   task: Task & { reminders: { type: string; remindAt: Date }[] };
   onEdit: (task: any) => void;
-  isArchived?: boolean;
+  isAdminView?: boolean;
 }
 
 import { ConfirmModal } from "@/components/ui/ConfirmModal";
 
-export function TaskItem({ task, onEdit, isArchived = false }: TaskItemProps) {
+export function TaskItem({ task, onEdit, isAdminView = false }: TaskItemProps) {
   const [isPending, startTransition] = useTransition();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const isCompleted = task.status === TaskStatus.COMPLETED;
@@ -23,6 +23,7 @@ export function TaskItem({ task, onEdit, isArchived = false }: TaskItemProps) {
   const isOverdue = !isCompleted && new Date(task.dueDate) < new Date(new Date().setHours(0, 0, 0, 0));
 
   const handleToggle = () => {
+    if (isAdminView) return; // Admin cannot toggle task status
     startTransition(async () => {
       const result = await toggleTaskStatus(task.id, task.status);
       if (result.success) {
@@ -34,10 +35,11 @@ export function TaskItem({ task, onEdit, isArchived = false }: TaskItemProps) {
   };
 
   const handleConfirmDelete = () => {
+    if (isAdminView) return; // Admin cannot delete tasks
     startTransition(async () => {
       const result = await deleteTask(task.id);
       if (result.success) {
-        toast.success("Tarea enviada a eliminadas");
+        toast.success("Tarea eliminada permanentemente");
         setIsDeleteModalOpen(false);
       } else {
         toast.error(result.error);
@@ -109,22 +111,20 @@ export function TaskItem({ task, onEdit, isArchived = false }: TaskItemProps) {
       <div className="hidden md:flex flex-col items-center gap-2 px-4 border-l border-foreground/5">
         <button 
           onClick={handleToggle}
-          disabled={isPending || isArchived}
+          disabled={isPending || isAdminView}
           className={cn(
             "group/status relative flex items-center justify-center w-36 h-9 rounded-full text-[10px] font-black uppercase tracking-widest transition-all duration-300 active:scale-95 disabled:opacity-50",
             isCompleted 
               ? "bg-success/10 text-success hover:bg-success hover:text-white" 
               : "bg-warning/10 text-warning hover:bg-warning hover:text-white",
-            isArchived && "bg-foreground/5 text-foreground/40 hover:bg-foreground/5 hover:text-foreground/40 cursor-default"
+            isAdminView && "bg-foreground/5 text-foreground/40 hover:bg-foreground/5 hover:text-foreground/40 cursor-default",
+            isAdminView && isCompleted && "bg-success/10 text-success cursor-default hover:bg-success/10 hover:text-success",
+            isAdminView && !isCompleted && "bg-warning/10 text-warning cursor-default hover:bg-warning/10 hover:text-warning"
           )}
         >
           {/* Estado Actual (Visible por defecto) */}
-          <div className="flex items-center gap-2 group-hover/status:opacity-0 transition-opacity duration-200">
-            {isArchived ? (
-              <>
-                <FiTrash2 size={14} /> Eliminada
-              </>
-            ) : isCompleted ? (
+          <div className="flex items-center gap-2 transition-opacity duration-200">
+            {isCompleted ? (
               <>
                 <FiCheckCircle size={14} /> Completada
               </>
@@ -135,9 +135,9 @@ export function TaskItem({ task, onEdit, isArchived = false }: TaskItemProps) {
             )}
           </div>
 
-          {/* Acción al Hover (Visible solo al pasar el mouse si NO está archivado) */}
-          {!isArchived && (
-            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/status:opacity-100 transition-opacity duration-200">
+          {/* Acción al Hover (Visible solo al pasar el mouse si NO es admin) */}
+          {!isAdminView && (
+            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/status:opacity-100 transition-opacity duration-200 bg-inherit rounded-full">
               {isCompleted ? (
                 <span className="flex items-center gap-2">
                   <FiCircle size={14} /> Desmarcar
@@ -153,7 +153,10 @@ export function TaskItem({ task, onEdit, isArchived = false }: TaskItemProps) {
       </div>
 
       {/* 4. Acciones */}
-      <div className="flex items-center justify-center md:justify-end gap-1 md:pl-4 border-t md:border-t-0 md:border-l border-foreground/5 pt-4 md:pt-0">
+      <div className={cn(
+        "flex items-center justify-center gap-1 md:pl-4 border-t md:border-t-0 md:border-l border-foreground/5 pt-4 md:pt-0",
+        isAdminView ? "md:justify-center" : "md:justify-end"
+      )}>
         <button
           className="p-3 rounded-2xl text-foreground-muted hover:text-primary hover:bg-primary/10 transition-all active:scale-90"
           title="Ver detalles"
@@ -161,7 +164,7 @@ export function TaskItem({ task, onEdit, isArchived = false }: TaskItemProps) {
           <FiEye size={20} />
         </button>
 
-        {!isArchived && (
+        {!isAdminView && (
           <>
             <button
               className="p-3 rounded-2xl text-foreground-muted hover:text-primary hover:bg-primary/10 transition-all active:scale-90"
@@ -190,18 +193,20 @@ export function TaskItem({ task, onEdit, isArchived = false }: TaskItemProps) {
         )}
       </div>
 
-      <ConfirmModal
-        open={isDeleteModalOpen}
-        onClose={() => setIsDeleteModalOpen(false)}
-        onConfirm={handleConfirmDelete}
-        title="¿Eliminar esta tarea?"
-        description={`La tarea "${task.title}" será movida a la pestaña de "Eliminadas". Podrás consultarla allí pero no editarla.`}
-        confirmLabel="Eliminar"
-        confirmClassName="bg-error hover:opacity-90"
-        icon={<FiTrash2 size={16} />}
-        iconClassName="bg-error/10 text-error"
-        isPending={isPending}
-      />
+      {!isAdminView && (
+        <ConfirmModal
+          open={isDeleteModalOpen}
+          onClose={() => setIsDeleteModalOpen(false)}
+          onConfirm={handleConfirmDelete}
+          title="¿Eliminar esta tarea?"
+          description={`La tarea "${task.title}" será eliminada de forma permanente y no podrá ser recuperada.`}
+          confirmLabel="Eliminar"
+          confirmClassName="bg-error hover:opacity-90"
+          icon={<FiTrash2 size={16} />}
+          iconClassName="bg-error/10 text-error"
+          isPending={isPending}
+        />
+      )}
     </div>
   );
 }

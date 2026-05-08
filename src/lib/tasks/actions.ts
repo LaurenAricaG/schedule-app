@@ -83,11 +83,8 @@ export async function updateTask(
 
 export async function deleteTask(id: number) {
   try {
-    const task = await prisma.task.update({
+    const task = await prisma.task.delete({
       where: { id },
-      data: {
-        deletedAt: new Date(),
-      },
     });
 
     revalidatePath(`/panel/cursos/${task.courseId}`);

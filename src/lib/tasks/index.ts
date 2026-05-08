@@ -22,13 +22,9 @@ export async function getTasksByCourseId(
     const where: any = { courseId };
 
     if (tab === "active") {
-      where.deletedAt = null;
       where.status = TaskStatus.PENDING;
     } else if (tab === "completed") {
-      where.deletedAt = null;
       where.status = TaskStatus.COMPLETED;
-    } else if (tab === "archived") {
-      where.deletedAt = { not: null };
     }
 
     const [tasks, totalTasks] = await Promise.all([

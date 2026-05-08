@@ -82,7 +82,7 @@ export default async function CourseDetailPage({
 
         <div className="flex flex-col items-end gap-2 relative z-10">
           {isOwner && (
-            <span className="text-xs text-primary font-bold tracking-wider uppercase">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-primary/10 text-primary text-[10px] font-black uppercase tracking-wider">
               Tu curso personal
             </span>
           )}
