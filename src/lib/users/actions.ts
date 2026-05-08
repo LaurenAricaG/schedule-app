@@ -1,5 +1,7 @@
+"use server";
+
 import { prisma } from "@/lib/prisma";
-import { ActionResult, UserDTO } from "@/types/definitions";
+import { ActionResult, UserWithRolDTO } from "@/types/definitions";
 import { revalidatePath } from "next/cache";
 
 // ── Leer ───────────────────────────────────────────────
@@ -11,7 +13,7 @@ import { revalidatePath } from "next/cache";
 export async function getUsers(
   page: number = 1,
   limit: number = 10,
-): Promise<ActionResult<{ users: UserDTO[]; total: number }>> {
+): Promise<ActionResult<{ users: UserWithRolDTO[]; total: number }>> {
   try {
     const skip = (page - 1) * limit;
 
@@ -19,7 +21,21 @@ export async function getUsers(
       prisma.user.findMany({
         skip,
         take: limit,
-        omit: { password: true, createdAt: true, deletedAt: true }, // ✅
+        select: {
+          id: true,
+          name: true,
+          lastname: true,
+          email: true,
+          username: true,
+          status: true,
+          rolId: true,
+          rol: {
+            select: {
+              id: true,
+              rol: true,
+            },
+          },
+        },
       }),
       prisma.user.count(),
     ]);
@@ -42,7 +58,7 @@ export async function deleteUser(id: number): Promise<ActionResult> {
   try {
     await prisma.user.update({
       where: { id },
-      data: { deletedAt: new Date() },
+      data: { deletedAt: new Date(), status: false },
     });
     revalidatePath("/admin/users");
     return { success: true, data: undefined };
@@ -61,7 +77,7 @@ export async function restoreUser(id: number): Promise<ActionResult> {
   try {
     await prisma.user.update({
       where: { id },
-      data: { deletedAt: null },
+      data: { deletedAt: null, status: true },
     });
     revalidatePath("/admin/users");
     return { success: true, data: undefined };

@@ -1,8 +1,9 @@
 import Pagination from "@/components/ui/Pagination";
 import Title from "@/components/ui/Title";
 import { getUsers } from "@/lib/users";
-import { UserDTO } from "@/types/definitions";
+import { UserWithRolDTO } from "@/types/definitions";
 import { FiPlus } from "react-icons/fi";
+import TableUsers from "./TableUsers";
 
 interface UsersListProps {
   page?: number;
@@ -16,12 +17,13 @@ export default async function UsersList({ page = 1 }: UsersListProps) {
   const limit = 5;
   const result = await getUsers(page, limit);
 
-  const initialUsers: UserDTO[] = result.success
+  const initialUsers: UserWithRolDTO[] = result.success
     ? (result.data?.users ?? [])
     : [];
   const totalItems = result.success ? (result.data?.total ?? 0) : 0;
   const totalPages = Math.ceil(totalItems / limit);
 
+  console.log("Usuarios obtenidos:", initialUsers);
   if (!initialUsers.length) {
     return (
       <p className="py-10 text-center text-sm text-foreground-muted">
@@ -31,7 +33,7 @@ export default async function UsersList({ page = 1 }: UsersListProps) {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-4">
       <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
         <Title title="Gestionar Usuarios" />
         <div className="flex flex-wrap gap-3">
@@ -40,15 +42,7 @@ export default async function UsersList({ page = 1 }: UsersListProps) {
           </button>
         </div>
       </div>
-
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-        {initialUsers.map((user) => (
-          <div key={user.id}>
-            <p>{user.name}</p>
-            <p>{user.email}</p>
-          </div>
-        ))}
-      </div>
+      <TableUsers users={initialUsers} />
 
       <Pagination
         totalPages={totalPages}
