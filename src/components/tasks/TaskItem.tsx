@@ -14,10 +14,12 @@ interface TaskItemProps {
 }
 
 import { ConfirmModal } from "@/components/ui/ConfirmModal";
+import Modal from "@/components/ui/Modal";
 
 export function TaskItem({ task, onEdit, isAdminView = false }: TaskItemProps) {
   const [isPending, startTransition] = useTransition();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const isCompleted = task.status === TaskStatus.COMPLETED;
   
   const isOverdue = !isCompleted && new Date(task.dueDate) < new Date(new Date().setHours(0, 0, 0, 0));
@@ -140,7 +142,7 @@ export function TaskItem({ task, onEdit, isAdminView = false }: TaskItemProps) {
             <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/status:opacity-100 transition-opacity duration-200 bg-inherit rounded-full">
               {isCompleted ? (
                 <span className="flex items-center gap-2">
-                  <FiCircle size={14} /> Desmarcar
+                  <FiCheckCircle size={14} /> Desmarcar
                 </span>
               ) : (
                 <span className="flex items-center gap-2">
@@ -158,6 +160,7 @@ export function TaskItem({ task, onEdit, isAdminView = false }: TaskItemProps) {
         isAdminView ? "md:justify-center" : "md:justify-end"
       )}>
         <button
+          onClick={() => setIsDetailsOpen(true)}
           className="p-3 rounded-2xl text-foreground-muted hover:text-primary hover:bg-primary/10 transition-all active:scale-90"
           title="Ver detalles"
         >
@@ -166,6 +169,15 @@ export function TaskItem({ task, onEdit, isAdminView = false }: TaskItemProps) {
 
         {!isAdminView && (
           <>
+            {/* Status Toggle for Mobile */}
+            <button
+              onClick={handleToggle}
+              disabled={isPending}
+              className="md:hidden p-3 rounded-2xl text-foreground-muted hover:text-success hover:bg-success/10 transition-all active:scale-90"
+              title={isCompleted ? "Marcar como pendiente" : "Completar"}
+            >
+              {isCompleted ? <FiCheckCircle size={20} className="text-success" /> : <FiCheckCircle size={20} />}
+            </button>
             <button
               className="p-3 rounded-2xl text-foreground-muted hover:text-primary hover:bg-primary/10 transition-all active:scale-90"
               title="Añadir recordatorio"
@@ -207,6 +219,51 @@ export function TaskItem({ task, onEdit, isAdminView = false }: TaskItemProps) {
           isPending={isPending}
         />
       )}
+
+      {/* Task Details Modal */}
+      <Modal
+        isOpen={isDetailsOpen}
+        onClose={() => setIsDetailsOpen(false)}
+        title="Detalles de la Tarea"
+      >
+        <div className="space-y-6">
+          <div>
+            <h4 className="text-xs font-black text-foreground-muted uppercase tracking-widest mb-1.5">Título</h4>
+            <p className="text-foreground font-bold text-lg leading-tight">{task.title}</p>
+          </div>
+          
+          <div>
+            <h4 className="text-xs font-black text-foreground-muted uppercase tracking-widest mb-1.5">Descripción</h4>
+            <p className="text-foreground whitespace-pre-wrap leading-relaxed text-sm">
+              {task.description || "No hay descripción proporcionada."}
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <h4 className="text-xs font-black text-foreground-muted uppercase tracking-widest mb-1.5">Fecha de entrega</h4>
+              <p className="text-foreground font-medium text-sm">
+                {new Date(task.dueDate).toLocaleDateString('es-ES', { 
+                  weekday: 'long',
+                  day: '2-digit', 
+                  month: 'long', 
+                  year: 'numeric',
+                  timeZone: 'UTC' 
+                })}
+              </p>
+            </div>
+            <div>
+              <h4 className="text-xs font-black text-foreground-muted uppercase tracking-widest mb-1.5">Estado</h4>
+              <span className={cn(
+                "inline-flex px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest",
+                isCompleted ? "bg-success/10 text-success" : "bg-warning/10 text-warning"
+              )}>
+                {isCompleted ? "Completada" : "Pendiente"}
+              </span>
+            </div>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }

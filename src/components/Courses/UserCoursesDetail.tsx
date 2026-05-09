@@ -48,7 +48,17 @@ export default function UserCoursesDetail({
       <div className="flex flex-col lg:flex-row sm:items-start justify-between gap-4">
         <div>
           <Title
-            title={`${view === "courses" ? "Cursos" : "Horario"} ${isAdmin ? `de ${initialData.user ? `${initialData.user.name} ${initialData.user.lastname}` : "Usuario"}` : "Asignados"}`}
+            title={`${view === "courses" ? "Cursos" : "Horario"} ${
+              isAdmin
+                ? `de ${
+                    initialData.user
+                      ? `${initialData.user.name} ${initialData.user.lastname}`
+                      : "Usuario"
+                  }`
+                : view === "courses"
+                  ? "Asignados"
+                  : "Asignado"
+            }`}
           />
           {isAdmin && (
             <p className="text-foreground-muted mt-2">

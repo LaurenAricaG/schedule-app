@@ -22,36 +22,6 @@ export function RolesSkeleton({ count = 4 }: { count?: number }) {
   );
 }
 
-export function TableSkeleton({ rows = 3 }: { rows?: number }) {
-  return (
-    <div className="rounded-2xl border border-black/8 bg-surface-card p-6 dark:border-white/10 animate-pulse">
-      <div className="overflow-x-auto">
-        <div className="min-w-150">
-          <div className="mb-6 flex justify-between">
-            <div className="h-6 w-1/4 rounded bg-black/10 dark:bg-white/10" />
-            <div className="h-6 w-1/4 rounded bg-black/10 dark:bg-white/10" />
-            <div className="h-6 w-16 rounded bg-black/10 dark:bg-white/10" />
-            <div className="h-6 w-24 rounded bg-black/10 dark:bg-white/10" />
-          </div>
-          <div className="space-y-4">
-            {[...Array(rows)].map((_, i) => (
-              <div
-                key={i}
-                className="flex items-center justify-between border-t border-black/5 pt-4 dark:border-white/5"
-              >
-                <div className="h-4 w-1/4 rounded bg-black/10 dark:bg-white/10" />
-                <div className="h-4 w-1/4 rounded bg-black/10 dark:bg-white/10" />
-                <div className="h-8 w-8 rounded-lg bg-black/10 dark:bg-white/10" />
-                <div className="h-8 w-24 rounded-lg bg-black/10 dark:bg-white/10" />
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 export function UserCoursesDetailSkeleton({ rows = 6 }: { rows?: number }) {
   return (
     <div className="space-y-8 animate-pulse">
@@ -90,6 +60,19 @@ export function UserCoursesDetailSkeleton({ rows = 6 }: { rows?: number }) {
           </div>
         ))}
       </div>
+
+      {/* Pagination Skeleton */}
+      <div className="flex items-center justify-between py-4 mt-2">
+        <div className="h-4 w-40 rounded bg-black/10 dark:bg-white/10" />
+        <div className="flex gap-1">
+          {[...Array(5)].map((_, j) => (
+            <div
+              key={j}
+              className="h-10 w-10 rounded-lg bg-black/10 dark:bg-white/10"
+            />
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
@@ -127,6 +110,83 @@ export function UsersListSkeleton({ count = 4 }: { count?: number }) {
             </div>
           </div>
         ))}
+      </div>
+
+      {/* Pagination Skeleton */}
+      <div className="flex items-center justify-between py-4 mt-2">
+        <div className="h-4 w-40 rounded bg-black/10 dark:bg-white/10" />
+        <div className="flex gap-1">
+          {[...Array(5)].map((_, j) => (
+            <div
+              key={j}
+              className="h-10 w-10 rounded-lg bg-black/10 dark:bg-white/10"
+            />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function TableUsersSkeleton({ count = 5 }: { count?: number }) {
+  return (
+    <div className="flex flex-col gap-4 animate-pulse">
+      {/* Header & Controls Skeleton */}
+      <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-2">
+        <div className="h-10 w-64 rounded-xl bg-black/10 dark:bg-white/10" />
+        <div className="flex flex-wrap gap-3">
+          <div className="h-10 w-40 rounded-lg bg-black/10 dark:bg-white/10" />
+        </div>
+      </div>
+
+      <div className="card ghost-border overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-black/8 dark:border-white/10">
+                <th className="px-6 py-4 text-left"><div className="h-4 w-20 rounded bg-black/10 dark:bg-white/10" /></th>
+                <th className="px-6 py-4 text-left"><div className="h-4 w-20 rounded bg-black/10 dark:bg-white/10" /></th>
+                <th className="px-6 py-4 text-left"><div className="h-4 w-20 rounded bg-black/10 dark:bg-white/10" /></th>
+                <th className="px-6 py-4 text-left"><div className="h-4 w-16 rounded bg-black/10 dark:bg-white/10" /></th>
+                <th className="px-6 py-4 text-left"><div className="h-4 w-16 rounded bg-black/10 dark:bg-white/10" /></th>
+                <th className="px-6 py-4 text-left"><div className="h-4 w-16 rounded bg-black/10 dark:bg-white/10" /></th>
+              </tr>
+            </thead>
+            <tbody>
+              {[...Array(count)].map((_, i) => (
+                <tr
+                  key={i}
+                  className="border-b border-black/5 dark:border-white/5"
+                >
+                  <td className="px-6 py-3">
+                    <div className="flex items-center gap-3">
+                      <div className="h-10 w-10 shrink-0 rounded-full bg-black/10 dark:bg-white/10" />
+                      <div className="h-4 w-32 rounded bg-black/10 dark:bg-white/10" />
+                    </div>
+                  </td>
+                  <td className="px-6 py-3">
+                    <div className="h-4 w-40 rounded bg-black/10 dark:bg-white/10" />
+                  </td>
+                  <td className="px-6 py-3">
+                    <div className="h-4 w-24 rounded bg-black/10 dark:bg-white/10" />
+                  </td>
+                  <td className="px-6 py-3">
+                    <div className="h-6 w-20 rounded-full bg-black/10 dark:bg-white/10" />
+                  </td>
+                  <td className="px-6 py-3">
+                    <div className="h-6 w-16 rounded-full bg-black/10 dark:bg-white/10" />
+                  </td>
+                  <td className="px-6 py-3">
+                    <div className="flex items-center gap-2">
+                      <div className="h-8 w-8 rounded-lg bg-black/10 dark:bg-white/10" />
+                      <div className="h-8 w-8 rounded-lg bg-black/10 dark:bg-white/10" />
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {/* Pagination Skeleton */}

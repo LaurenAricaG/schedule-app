@@ -1,6 +1,8 @@
 "use client";
 
 import { cn } from "@/utils/cn.utils";
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 
 type ConfirmModalProps = {
   open: boolean;
@@ -29,14 +31,20 @@ export function ConfirmModal({
   iconClassName,
   isPending = false,
 }: ConfirmModalProps) {
-  if (!open) return null;
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!open || !mounted) return null;
 
   const handleBackdropClick = () => {
     if (isPending) return;
     onClose();
   };
 
-  return (
+  return createPortal(
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm"
       onClick={handleBackdropClick}
@@ -95,6 +103,7 @@ export function ConfirmModal({
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

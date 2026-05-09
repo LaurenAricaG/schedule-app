@@ -1,6 +1,8 @@
 import UsersList from "@/components/admin/Users";
 import { ErrorBoundary } from "@/components/error/ErrorBoundary";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
+import { Suspense } from "react";
+import { TableUsersSkeleton } from "@/components/ui/Skeletons";
 
 /**
  * Página principal de administración de usuarios.
@@ -27,7 +29,9 @@ export default async function UsersPage({
         variant="compact"
         title="No se pudo cargar la lista de usuarios"
       >
-        <UsersList page={currentPage} />
+        <Suspense fallback={<TableUsersSkeleton />}>
+          <UsersList page={currentPage} />
+        </Suspense>
       </ErrorBoundary>
     </section>
   );
