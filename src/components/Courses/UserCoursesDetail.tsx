@@ -60,9 +60,13 @@ export default function UserCoursesDetail({
                   : "Asignado"
             }`}
           />
-          {isAdmin && (
+          {isAdmin ? (
             <p className="text-foreground-muted mt-2">
               {initialData.user?.email}
+            </p>
+          ) : (
+            <p className="text-foreground-muted mt-2">
+              Gestiona tus actividades.
             </p>
           )}
         </div>
