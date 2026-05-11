@@ -33,13 +33,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         const user = await prisma.user.findUnique({
           where: {
             username: credentials.username as string,
-            deletedAt: null,
-            status: true,
           },
           include: { rol: true },
         });
 
-        if (!user) return null;
+        // Validar existencia, estado del usuario y estado del rol
+        if (!user || user.deletedAt || !user.status || user.rol.deletedAt) {
+          return null;
+        }
 
         const passwordOk = await bcrypt.compare(
           credentials.password as string,
