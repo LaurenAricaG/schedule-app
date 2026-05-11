@@ -117,3 +117,60 @@ export function CheckboxField({ label, checked, onChange, id }: CheckboxFieldPro
     </label>
   );
 }
+interface SelectFieldProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
+  label: string;
+  options: { value: string | number; label: string }[];
+  icon?: IconType;
+  error?: string;
+  className?: string;
+}
+
+export function SelectField({ 
+  label, 
+  options, 
+  icon: Icon, 
+  error, 
+  className, 
+  id, 
+  ...props 
+}: SelectFieldProps) {
+  return (
+    <div className={cn("w-full", className)}>
+      <label 
+        htmlFor={id} 
+        className="block text-xs font-medium uppercase tracking-wide text-foreground-muted mb-2"
+      >
+        {label}
+      </label>
+      <div className="relative group">
+        {Icon && (
+          <div className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground-muted/40 transition-colors pointer-events-none">
+            <Icon size={16} />
+          </div>
+        )}
+        <select
+          id={id}
+          className={cn(
+            "w-full rounded-lg border border-black/8 bg-surface py-3 text-sm text-foreground outline-none transition-colors focus:border-primary dark:border-white/10 appearance-none cursor-pointer",
+            Icon ? "pl-10 pr-10" : "px-3 pr-10",
+            error && "border-error focus:border-error",
+            props.disabled && "opacity-60 cursor-not-allowed"
+          )}
+          {...props}
+        >
+          {options.map((opt) => (
+            <option key={opt.value} value={opt.value}>
+              {opt.label}
+            </option>
+          ))}
+        </select>
+        <div className="absolute right-3 top-1/2 -translate-y-1/2 text-foreground-muted/40 pointer-events-none">
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+          </svg>
+        </div>
+      </div>
+      {error && <p className="mt-1 text-xs text-error">{error}</p>}
+    </div>
+  );
+}

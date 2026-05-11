@@ -1,9 +1,92 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { ActionResult, UserWithRolDTO } from "@/types/definitions";
+import { ActionResult } from "@/types/definitions";
 import { revalidatePath } from "next/cache";
+import bcrypt from "bcryptjs";
+import { z } from "zod";
 
+const UserSchema = z.object({
+  name: z.string().min(1, "El nombre es requerido"),
+  lastname: z.string().optional(),
+  email: z.string().email("Email inválido").min(1, "El email es requerido"),
+  username: z.string().min(3, "El usuario debe tener al menos 3 caracteres").min(1, "El usuario es requerido"),
+  password: z.string().min(6, "La contraseña debe tener al menos 6 caracteres").optional().or(z.literal("")),
+  rolId: z.coerce.number().min(1, "El rol es requerido"),
+});
+
+// ── Crear ──────────────────────────────────────────────
+/**
+ * Crea un nuevo usuario en la base de datos.
+ */
+export async function createUser(data: any): Promise<ActionResult> {
+  const validated = UserSchema.safeParse(data);
+
+  if (!validated.success) {
+    const firstError = validated.error.issues[0].message;
+    return { success: false, error: firstError };
+  }
+
+  try {
+    if (!data.password) {
+      return { success: false, error: "La contraseña es requerida para nuevos usuarios" };
+    }
+    
+    const hashedPassword = await bcrypt.hash(data.password, 10);
+
+    await prisma.user.create({
+      data: {
+        ...validated.data,
+        password: hashedPassword,
+      },
+    });
+
+    revalidatePath("/admin/users");
+    return { success: true, data: undefined };
+  } catch (error: any) {
+    console.error("Error creating user:", error);
+    if (error.code === "P2002") {
+      return { success: false, error: "El email o nombre de usuario ya existe." };
+    }
+    return { success: false, error: "No se pudo crear el usuario." };
+  }
+}
+
+// ── Actualizar ─────────────────────────────────────────
+/**
+ * Actualiza los datos de un usuario existente.
+ */
+export async function updateUser(id: number, data: any): Promise<ActionResult> {
+  const validated = UserSchema.partial().safeParse(data);
+
+  if (!validated.success) {
+    const firstError = validated.error.issues[0].message;
+    return { success: false, error: firstError };
+  }
+
+  try {
+    const updateData = { ...validated.data };
+
+    // Si hay una nueva contraseña, hashearla
+    if (data.password && data.password.trim() !== "") {
+      updateData.password = await bcrypt.hash(data.password, 10);
+    }
+
+    await prisma.user.update({
+      where: { id },
+      data: updateData,
+    });
+
+    revalidatePath("/admin/users");
+    return { success: true, data: undefined };
+  } catch (error: any) {
+    console.error("Error updating user:", error);
+    if (error.code === "P2002") {
+      return { success: false, error: "El email o nombre de usuario ya existe." };
+    }
+    return { success: false, error: "No se pudo actualizar el usuario." };
+  }
+}
 
 // ── Eliminar (soft delete) ─────────────────────────────
 /**
