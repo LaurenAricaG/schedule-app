@@ -6,6 +6,7 @@ import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { FiActivity } from "react-icons/fi";
 import { Suspense } from "react";
 import { TaskList } from "@/components/tasks/TaskList";
+import { TaskHeader } from "@/components/tasks/TaskHeader";
 import { TasksSkeleton } from "@/components/ui/Skeletons";
 
 export default async function AdminCourseDetailPage({
@@ -25,10 +26,7 @@ export default async function AdminCourseDetailPage({
   const id = parseInt(courseId);
   const page = parseInt(pageStr || "1");
 
-  const [courseResult, tasksResult] = await Promise.all([
-    getCourseById(id),
-    getTasksByCourseId(id, page, 6, tab),
-  ]);
+  const courseResult = await getCourseById(id);
 
   if (!courseResult.success || !courseResult.data) {
     redirect(`/admin/cursos/${userId}`);
@@ -36,10 +34,6 @@ export default async function AdminCourseDetailPage({
 
   const course = courseResult.data;
   const studentName = `${course.user.name} ${course.user.lastname}`;
-  
-  const tasksData = tasksResult.success
-    ? tasksResult
-    : { data: [], totalPages: 1, totalTasks: 0 };
 
   return (
     <section className="space-y-6 animate-in fade-in duration-500">
@@ -93,17 +87,42 @@ export default async function AdminCourseDetailPage({
 
       {/* Task Section */}
       <div className="space-y-4">
-        <Suspense key={`${id}-${page}-${tab}`} fallback={<TasksSkeleton />}>
-          <TaskList
-            courseId={id}
-            initialTasks={tasksData.data || []}
-            totalPages={tasksData.totalPages || 1}
-            currentPage={page}
-            totalTasks={tasksData.totalTasks || 0}
-            isAdminView={true}
-          />
+        <TaskHeader courseId={id} isAdminView={true} />
+
+        <Suspense key={`${id}-${page}-${tab}`} fallback={<TasksSkeleton minimal isAdmin={true} />}>
+          <TaskContainer courseId={id} page={page} tab={tab} isAdminView={true} />
         </Suspense>
       </div>
     </section>
+  );
+}
+
+async function TaskContainer({
+  courseId,
+  page,
+  tab,
+  isAdminView = false,
+}: {
+  courseId: number;
+  page: number;
+  tab: string;
+  isAdminView?: boolean;
+}) {
+  const tasksResult = await getTasksByCourseId(courseId, page, 6, tab);
+
+  const tasksData = tasksResult.success
+    ? tasksResult
+    : { data: [], totalPages: 1, totalTasks: 0 };
+
+  return (
+    <TaskList
+      courseId={courseId}
+      initialTasks={tasksData.data || []}
+      totalPages={tasksData.totalPages || 1}
+      currentPage={page}
+      totalTasks={tasksData.totalTasks || 0}
+      isAdminView={isAdminView}
+      hideHeader={true}
+    />
   );
 }

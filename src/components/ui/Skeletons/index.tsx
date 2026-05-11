@@ -1,3 +1,5 @@
+import { cn } from "@/utils/cn.utils";
+
 export function RolesSkeleton({ count = 4 }: { count?: number }) {
   return (
     <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
@@ -22,7 +24,13 @@ export function RolesSkeleton({ count = 4 }: { count?: number }) {
   );
 }
 
-export function UserCoursesDetailSkeleton({ rows = 6 }: { rows?: number }) {
+export function UserCoursesDetailSkeleton({
+  rows = 6,
+  isAdmin = false,
+}: {
+  rows?: number;
+  isAdmin?: boolean;
+}) {
   return (
     <div className="space-y-8 animate-pulse">
       {/* Header Skeleton */}
@@ -33,7 +41,9 @@ export function UserCoursesDetailSkeleton({ rows = 6 }: { rows?: number }) {
         </div>
         <div className="flex gap-3">
           <div className="h-10 w-32 rounded-lg bg-black/10 dark:bg-white/10" />
-          <div className="h-10 w-32 rounded-lg bg-black/10 dark:bg-white/10" />
+          {isAdmin && (
+            <div className="h-10 w-32 rounded-lg bg-black/10 dark:bg-white/10" />
+          )}
         </div>
       </div>
 
@@ -42,14 +52,16 @@ export function UserCoursesDetailSkeleton({ rows = 6 }: { rows?: number }) {
         {[...Array(rows)].map((_, i) => (
           <div
             key={i}
-            className="flex flex-col rounded-xl bg-surface-card p-5 h-56"
+            className="flex flex-col rounded-xl bg-surface-card p-5 h-56 border border-black/5 dark:border-white/5"
           >
             <div className="mb-5 flex items-start justify-between">
               <div className="h-12 w-12 rounded-xl bg-black/10 dark:bg-white/10" />
-              <div className="flex gap-2">
-                <div className="h-8 w-8 rounded-lg bg-black/10 dark:bg-white/10" />
-                <div className="h-8 w-8 rounded-lg bg-black/10 dark:bg-white/10" />
-              </div>
+              {isAdmin && (
+                <div className="flex gap-2">
+                  <div className="h-8 w-8 rounded-lg bg-black/10 dark:bg-white/10" />
+                  <div className="h-8 w-8 rounded-lg bg-black/10 dark:bg-white/10" />
+                </div>
+              )}
             </div>
             <div className="h-5 w-3/4 rounded bg-black/10 dark:bg-white/10 mb-3" />
             <div className="h-4 w-1/2 rounded bg-black/10 dark:bg-white/10 mb-auto" />
@@ -271,36 +283,105 @@ export function ScheduleSkeleton() {
   );
 }
 
-export function TasksSkeleton({ count = 6 }: { count?: number }) {
+export function TasksSkeleton({
+  count = 6,
+  isAdmin = false,
+  minimal = false,
+}: {
+  count?: number;
+  isAdmin?: boolean;
+  minimal?: boolean;
+}) {
   return (
     <div className="space-y-6 animate-pulse">
-      {/* Header & Controls Skeleton */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="h-10 w-64 rounded-xl bg-black/10 dark:bg-white/10" />
-        <div className="h-10 w-36 rounded-lg bg-black/10 dark:bg-white/10" />
+      {/* 1. Cabecera Skeleton */}
+      {!minimal && !isAdmin && (
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6">
+          <div className="space-y-2">
+            <div className="h-8 w-40 rounded-xl bg-black/10 dark:bg-white/10" />
+            <div className="h-4 w-56 rounded bg-black/10 dark:bg-white/10" />
+          </div>
+          <div className="h-10 w-44 rounded-lg bg-black/10 dark:bg-white/10" />
+        </div>
+      )}
+
+      {/* 2. Tabs Skeleton */}
+      {!minimal && (
+        <div className="flex items-center gap-7 border-b border-foreground/5 pb-px">
+          <div className="pb-4 relative">
+            <div className="h-4 w-24 rounded bg-black/10 dark:bg-white/10" />
+            <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-black/10 dark:bg-white/10" />
+          </div>
+          <div className="pb-4">
+            <div className="h-4 w-28 rounded bg-black/5 dark:bg-white/5" />
+          </div>
+        </div>
+      )}
+
+      {/* 3. Table Headers Skeleton (Desktop) */}
+      <div className="hidden md:grid grid-cols-[1fr_160px_160px_200px] gap-6 px-6">
+        <div className="h-3 w-32 rounded bg-black/5 dark:bg-white/5" />
+        <div className="flex justify-center">
+          <div className="h-3 w-24 rounded bg-black/5 dark:bg-white/5" />
+        </div>
+        <div className="flex justify-center">
+          <div className="h-3 w-16 rounded bg-black/5 dark:bg-white/5" />
+        </div>
+        <div className="flex justify-center">
+          <div className="h-3 w-20 rounded bg-black/5 dark:bg-white/5" />
+        </div>
       </div>
 
-      {/* Task List Skeleton */}
-      <div className="grid gap-3">
+      {/* 4. Task List Skeleton */}
+      <div className="grid gap-4">
         {[...Array(count)].map((_, i) => (
           <div
             key={i}
-            className="flex items-center gap-4 p-4 rounded-2xl border border-black/5 dark:border-white/5 bg-surface-card/50"
+            className="group grid grid-cols-1 md:grid-cols-[1fr_160px_160px_200px] items-center gap-4 md:gap-6 p-5 sm:p-6 rounded-3xl border border-black/5 dark:border-white/5 bg-surface-card"
           >
-            <div className="h-6 w-6 rounded-full bg-black/10 dark:bg-white/10" />
-            <div className="grow space-y-2">
-              <div className="h-4 w-1/2 rounded bg-black/10 dark:bg-white/10" />
-              <div className="h-3 w-1/4 rounded bg-black/10 dark:bg-white/10" />
+            {/* Info Column */}
+            <div className="flex items-center gap-6">
+              <div className="hidden sm:flex h-16 w-16 rounded-2xl bg-black/10 dark:bg-white/10 shrink-0" />
+              <div className="grow space-y-2">
+                <div className="h-3 w-20 rounded bg-black/5 dark:bg-white/5" />
+                <div className="h-5 w-3/4 rounded bg-black/10 dark:bg-white/10" />
+                <div className="h-3 w-1/2 rounded bg-black/5 dark:bg-white/5" />
+              </div>
             </div>
-            <div className="flex gap-2">
-              <div className="h-8 w-8 rounded-lg bg-black/10 dark:bg-white/10" />
-              <div className="h-8 w-8 rounded-lg bg-black/10 dark:bg-white/10" />
+
+            {/* Date Column */}
+            <div className="hidden md:flex justify-center border-l border-foreground/5 px-4">
+              <div className="h-4 w-24 rounded bg-black/10 dark:bg-white/10" />
+            </div>
+
+            {/* Status Column */}
+            <div className="hidden md:flex justify-center border-l border-foreground/5 px-4">
+              <div className="h-9 w-36 rounded-full bg-black/10 dark:bg-white/10" />
+            </div>
+
+            {/* Actions Column */}
+            <div
+              className={cn(
+                "flex items-center gap-1 md:pl-4 border-t md:border-t-0 md:border-l border-foreground/5 pt-4 md:pt-0",
+                isAdmin ? "justify-center" : "justify-center md:justify-end",
+              )}
+            >
+              {isAdmin ? (
+                <div className="h-10 w-10 rounded-2xl bg-black/10 dark:bg-white/10" />
+              ) : (
+                <>
+                  <div className="h-10 w-10 rounded-2xl bg-black/10 dark:bg-white/10" />
+                  <div className="h-10 w-10 rounded-2xl bg-black/10 dark:bg-white/10" />
+                  <div className="h-10 w-10 rounded-2xl bg-black/10 dark:bg-white/10" />
+                  <div className="h-10 w-10 rounded-2xl bg-black/10 dark:bg-white/10" />
+                </>
+              )}
             </div>
           </div>
         ))}
       </div>
 
-      {/* Pagination Skeleton */}
+      {/* 5. Pagination Skeleton */}
       <div className="flex items-center justify-between py-4 mt-2">
         <div className="h-4 w-40 rounded bg-black/10 dark:bg-white/10" />
         <div className="flex gap-1">

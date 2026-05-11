@@ -5,6 +5,7 @@ import { getTasksByCourseId } from "@/lib/tasks";
 import { redirect } from "next/navigation";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { TaskList } from "@/components/tasks/TaskList";
+import { TaskHeader } from "@/components/tasks/TaskHeader";
 import { TasksSkeleton } from "@/components/ui/Skeletons";
 import { FiActivity } from "react-icons/fi";
 
@@ -24,20 +25,13 @@ export default async function CourseDetailPage({
   const id = parseInt(courseId);
   const page = parseInt(pageStr || "1");
 
-  const [courseResult, tasksResult] = await Promise.all([
-    getCourseById(id),
-    getTasksByCourseId(id, page, 6, tab),
-  ]);
+  const courseResult = await getCourseById(id);
 
   if (!courseResult.success || !courseResult.data) {
     redirect("/panel/cursos");
   }
 
   const course = courseResult.data;
-  const tasksData = tasksResult.success
-    ? tasksResult
-    : { data: [], totalPages: 1, totalTasks: 0 };
-
   const isOwner = String(session.user.id) === String(course.user.id);
 
   return (
@@ -91,16 +85,39 @@ export default async function CourseDetailPage({
 
       {/* Task Section */}
       <div className="space-y-4">
-        <Suspense key={`${id}-${page}-${tab}`} fallback={<TasksSkeleton />}>
-          <TaskList
-            courseId={id}
-            initialTasks={tasksData.data || []}
-            totalPages={tasksData.totalPages || 1}
-            currentPage={page}
-            totalTasks={tasksData.totalTasks || 0}
-          />
+        <TaskHeader courseId={id} />
+        
+        <Suspense key={`${id}-${page}-${tab}`} fallback={<TasksSkeleton minimal isAdmin={false} />}>
+          <TaskContainer courseId={id} page={page} tab={tab} />
         </Suspense>
       </div>
     </section>
+  );
+}
+
+async function TaskContainer({
+  courseId,
+  page,
+  tab,
+}: {
+  courseId: number;
+  page: number;
+  tab: string;
+}) {
+  const tasksResult = await getTasksByCourseId(courseId, page, 6, tab);
+
+  const tasksData = tasksResult.success
+    ? tasksResult
+    : { data: [], totalPages: 1, totalTasks: 0 };
+
+  return (
+    <TaskList
+      courseId={courseId}
+      initialTasks={tasksData.data || []}
+      totalPages={tasksData.totalPages || 1}
+      currentPage={page}
+      totalTasks={tasksData.totalTasks || 0}
+      hideHeader={true}
+    />
   );
 }

@@ -42,7 +42,7 @@ export default async function UserCoursesPage(props: {
       />
       {/* Manejador de errores para el detalle de cursos */}
       <ErrorBoundary variant="compact" title="No se pudieron cargar los cursos">
-        <Suspense key={currentPage} fallback={<UserCoursesDetailSkeleton />}>
+        <Suspense key={currentPage} fallback={<UserCoursesDetailSkeleton isAdmin={true} />}>
           <CoursesLoader userId={userId} page={currentPage} />
         </Suspense>
       </ErrorBoundary>
