@@ -18,7 +18,10 @@ export default function PanelMobileNav() {
     <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-lg border-t border-black/5 px-6 py-3 flex justify-between items-center z-50 dark:bg-surface-card/80 dark:border-white/5">
       {navItems.map((item) => {
         const Icon = item.icon;
-        const isActive = pathname === item.href;
+        const isHome = item.href === "/panel";
+        const isActive = isHome 
+          ? pathname === item.href 
+          : pathname === item.href || pathname.startsWith(`${item.href}/`);
 
         return (
           <LazyLink

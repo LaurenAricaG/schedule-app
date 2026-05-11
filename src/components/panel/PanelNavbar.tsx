@@ -18,7 +18,10 @@ export default function PanelNavbar() {
     <nav className="hidden md:flex items-center gap-1">
       {navItems.map((item) => {
         const Icon = item.icon;
-        const isActive = pathname === item.href;
+        const isHome = item.href === "/panel";
+        const isActive = isHome 
+          ? pathname === item.href 
+          : pathname === item.href || pathname.startsWith(`${item.href}/`);
 
         return (
           <LazyLink
