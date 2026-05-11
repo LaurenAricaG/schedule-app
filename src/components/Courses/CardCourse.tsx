@@ -9,7 +9,7 @@ import { FiEdit2, FiTrash2, FiRotateCcw, FiBook } from "react-icons/fi";
 import { toast } from "sonner";
 import { cn } from "@/utils/cn.utils";
 import { deleteCourse, restoreCourse } from "@/lib/courses/actions";
-import Link from "next/link";
+import LazyLink from "@/components/ui/LazyLink";
 
 type CardCourseProps = {
   course: Course;
@@ -136,32 +136,29 @@ export default function CardCourse({ course, onSuccess, isAdmin = false }: CardC
           )}
         >
           <StatusBadge active={!deleted} />
-          <Link
+          <LazyLink
             href={
               isAdmin
                 ? `/admin/cursos/${course.userId}/${course.id}`
                 : `/panel/cursos/${course.id}`
             }
+            className={cn(
+              "inline-flex items-center gap-2 rounded-lg px-4 py-2 text-xs font-semibold transition-colors cursor-pointer",
+              deleted &&
+                "bg-primary/10 text-primary hover:bg-primary/20 dark:bg-primary/20 dark:text-primary-container dark:hover:bg-primary/30",
+            )}
+            style={
+              !deleted
+                ? {
+                    backgroundColor:
+                      "color-mix(in srgb, var(--course-color) 10%, transparent)",
+                    color: "var(--course-color)",
+                  }
+                : undefined
+            }
           >
-            <button
-              className={cn(
-                "inline-flex items-center gap-2 rounded-lg px-4 py-2 text-xs font-semibold transition-colors cursor-pointer",
-                deleted &&
-                  "bg-primary/10 text-primary hover:bg-primary/20 dark:bg-primary/20 dark:text-primary-container dark:hover:bg-primary/30",
-              )}
-              style={
-                !deleted
-                  ? {
-                      backgroundColor:
-                        "color-mix(in srgb, var(--course-color) 10%, transparent)",
-                      color: "var(--course-color)",
-                    }
-                  : undefined
-              }
-            >
-              Gestionar
-            </button>
-          </Link>
+            Gestionar
+          </LazyLink>
         </div>
       </article>
 

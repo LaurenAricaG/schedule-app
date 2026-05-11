@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import LazyLink from "@/components/ui/LazyLink";
 import { usePathname } from "next/navigation";
 import LogoutButton from "@/components/ui/LogoutButton";
 import { cn } from "@/utils/cn.utils";
@@ -86,7 +86,7 @@ export default function Sidebar({ open, setOpen, isDesktop }: any) {
 
             return (
               <div key={item.href} className="relative group">
-                <Link
+                <LazyLink
                   href={item.href}
                   onClick={() => {
                     if (!isDesktop) {
@@ -112,7 +112,7 @@ export default function Sidebar({ open, setOpen, isDesktop }: any) {
                   >
                     {item.label}
                   </span>
-                </Link>
+                </LazyLink>
 
                 {!open && (
                   <div className="pointer-events-none absolute left-full top-1/2 z-50 ml-3 hidden -translate-y-1/2 rounded-lg bg-(--color-surface-card) px-2.5 py-1.5 text-xs font-medium text-(--color-foreground) opacity-0 shadow-md ring-1 ring-black/10 transition-opacity duration-150 group-hover:opacity-100 dark:ring-white/10 md:block">

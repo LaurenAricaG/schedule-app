@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import LazyLink from "@/components/ui/LazyLink";
 import { usePathname } from "next/navigation";
 import { FiBook, FiCalendar, FiHome } from "react-icons/fi";
 import { cn } from "@/utils/cn.utils";
@@ -21,7 +21,7 @@ export default function PanelNavbar() {
         const isActive = pathname === item.href;
 
         return (
-          <Link
+          <LazyLink
             key={item.href}
             href={item.href}
             className={cn(
@@ -33,7 +33,7 @@ export default function PanelNavbar() {
           >
             <Icon size={16} />
             {item.label}
-          </Link>
+          </LazyLink>
         );
       })}
     </nav>

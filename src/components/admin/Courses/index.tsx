@@ -1,5 +1,5 @@
-﻿import { User } from "@/types/definitions";
-import Link from "next/link";
+import { User } from "@/types/definitions";
+import LazyLink from "@/components/ui/LazyLink";
 import { getUsersWithCoursesCount } from "@/lib/courses";
 import Pagination from "@/components/ui/Pagination";
 import { FiUser, FiArrowRight, FiBook } from "react-icons/fi";
@@ -78,12 +78,13 @@ export default async function UsersCoursesList({
 
               {/* Actions */}
               <div className="flex justify-end flex-1">
-                <Link href={`/admin/cursos/${user.id}`}>
-                  <button className="inline-flex items-center gap-2 rounded-lg bg-primary/10 px-5 py-2.5 text-sm font-semibold text-primary transition-colors hover:bg-primary/20 dark:bg-primary/20 dark:text-primary-container dark:hover:bg-primary/30 cursor-pointer">
-                    Gestionar
-                    <FiArrowRight className="h-4 w-4" />
-                  </button>
-                </Link>
+                <LazyLink
+                  href={`/admin/cursos/${user.id}`}
+                  className="inline-flex items-center gap-2 rounded-lg bg-primary/10 px-5 py-2.5 text-sm font-semibold text-primary transition-colors hover:bg-primary/20 dark:bg-primary/20 dark:text-primary-container dark:hover:bg-primary/30 cursor-pointer"
+                >
+                  Gestionar
+                  <FiArrowRight className="h-4 w-4" />
+                </LazyLink>
               </div>
             </div>
           </div>

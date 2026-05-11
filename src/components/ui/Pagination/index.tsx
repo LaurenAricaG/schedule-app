@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import LazyLink from "@/components/ui/LazyLink";
 import { usePathname, useSearchParams } from "next/navigation";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { cn } from "@/utils/cn.utils";
@@ -56,7 +56,7 @@ export default function Pagination({
       </div>
 
       <div className="flex items-center gap-1">
-        <Link
+        <LazyLink
           href={currentPage > 1 ? createPageURL(currentPage - 1) : "#"}
           className={cn(
             "inline-flex h-10 w-10 items-center justify-center rounded-lg ghost-border bg-surface-card transition-colors",
@@ -65,7 +65,7 @@ export default function Pagination({
           aria-disabled={currentPage <= 1}
         >
           <FiChevronLeft className="h-5 w-5" />
-        </Link>
+        </LazyLink>
 
         {allPages.map((page, i) => {
           if (page === "...") {
@@ -77,7 +77,7 @@ export default function Pagination({
           }
 
           return (
-            <Link
+            <LazyLink
               key={`page-${page}`}
               href={createPageURL(page)}
               className={cn(
@@ -88,11 +88,11 @@ export default function Pagination({
               )}
             >
               {page}
-            </Link>
+            </LazyLink>
           );
         })}
 
-        <Link
+        <LazyLink
           href={currentPage < totalPages ? createPageURL(currentPage + 1) : "#"}
           className={cn(
             "inline-flex h-10 w-10 items-center justify-center rounded-lg ghost-border bg-surface-card transition-colors",
@@ -101,7 +101,7 @@ export default function Pagination({
           aria-disabled={currentPage >= totalPages}
         >
           <FiChevronRight className="h-5 w-5" />
-        </Link>
+        </LazyLink>
       </div>
     </div>
   );

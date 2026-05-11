@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import LazyLink from "@/components/ui/LazyLink";
 import { cn } from "@/utils/cn.utils";
 
 interface BreadcrumbsProps {
@@ -24,12 +24,12 @@ export function Breadcrumbs({ items, className }: BreadcrumbsProps) {
       {items.map((item, index) => (
         <div key={index} className="flex items-center gap-2">
           {item.href ? (
-            <Link
+            <LazyLink
               href={item.href}
               className="hover:text-foreground transition-colors hover:underline"
             >
               {item.label}
-            </Link>
+            </LazyLink>
           ) : (
             <span className="text-foreground">{item.label}</span>
           )}
