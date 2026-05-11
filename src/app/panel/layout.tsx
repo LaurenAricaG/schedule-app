@@ -1,7 +1,7 @@
 import LogoutButton from "@/components/ui/LogoutButton";
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
-import Link from "next/link";
+import LazyLink from "@/components/ui/LazyLink";
 import { FiCalendar } from "react-icons/fi";
 import ThemeToggle from "@/components/theme/ThemeToggle";
 import { BiLogOut } from "react-icons/bi";
@@ -24,7 +24,7 @@ export default async function PanelLayout({
       <header className="bg-white/80 backdrop-blur-md border-b border-black/5 sticky top-0 z-50 dark:bg-surface-card/80 dark:border-white/5">
         <div className="px-4 sm:px-8 py-4 flex justify-between items-center max-w-7xl mx-auto">
           <div className="flex items-center gap-8">
-            <Link
+            <LazyLink
               href="/panel"
               className="flex items-center gap-2 transition-opacity"
             >
@@ -34,7 +34,7 @@ export default async function PanelLayout({
               <h1 className="text-lg font-bold tracking-tight text-foreground">
                 Mi Panel
               </h1>
-            </Link>
+            </LazyLink>
 
             <PanelNavbar />
           </div>

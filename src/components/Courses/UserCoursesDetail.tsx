@@ -8,7 +8,7 @@ import CardCourse from "./CardCourse";
 import { useRouter } from "next/navigation";
 import UserSchedule from "./UserSchedule";
 import Title from "@/components/ui/Title";
-import Link from "next/link";
+import LazyLink from "@/components/ui/LazyLink";
 
 type CoursesByUserResponse = {
   user: Partial<User> | null;
@@ -68,13 +68,13 @@ export default function UserCoursesDetail({
         </div>
         <div className="flex flex-wrap gap-3">
           {isRouted ? (
-            <Link
+            <LazyLink
               href={view === "courses" ? scheduleHref : coursesHref}
               className="inline-flex items-center gap-2 rounded-lg border border-black/10 dark:border-white/10 bg-surface-card px-2.5 md:px-5 py-2.5 text-sm font-semibold text-primary hover:bg-surface-low transition-colors ghost-border cursor-pointer"
             >
               <FiCalendar />
               {view === "courses" ? "Ver Horario" : "Ver Cursos"}
-            </Link>
+            </LazyLink>
           ) : (
             <button
               onClick={() =>
