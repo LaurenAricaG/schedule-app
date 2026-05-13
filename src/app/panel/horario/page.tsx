@@ -1,22 +1,29 @@
 import { Suspense } from "react";
 import UserCoursesDetail from "@/components/Courses/UserCoursesDetail";
 import { ErrorBoundary } from "@/components/error/ErrorBoundary";
-import { getCoursesByUser } from "@/lib/courses";
+import { getCoursesByUser, getScheduleByUser } from "@/lib/courses";
 import { ScheduleSkeleton } from "@/components/ui/Skeletons";
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 
 async function ScheduleLoader({ userId }: { userId: number }) {
-  const result = await getCoursesByUser(userId, 1, 1);
-  const initialData = result.success
-    ? result.data
+  const [coursesResult, scheduleResult] = await Promise.all([
+    getCoursesByUser(userId, 1, 100),
+    getScheduleByUser(userId)
+  ]);
+
+  const initialData = coursesResult.success
+    ? coursesResult.data
     : { user: null, courses: [], total: 0 };
+
+  const initialSchedules = scheduleResult.success ? scheduleResult.data : [];
 
   return (
     <UserCoursesDetail
       userId={userId}
       initialData={initialData}
+      initialSchedules={initialSchedules}
       isAdmin={false}
       isRouted={true}
       initialView="schedule"

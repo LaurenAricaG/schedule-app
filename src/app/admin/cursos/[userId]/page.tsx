@@ -13,7 +13,17 @@ async function CoursesLoader({ userId, page }: { userId: number; page: number })
   const initialData = result.success
     ? result.data
     : { user: null, courses: [], total: 0 };
-  return <UserCoursesDetail userId={userId} initialData={initialData} page={page} isAdmin={true} />;
+  return (
+    <UserCoursesDetail 
+      userId={userId} 
+      initialData={initialData} 
+      page={page} 
+      isAdmin={true} 
+      isRouted={true}
+      scheduleHref={`/admin/cursos/${userId}/horario`}
+      coursesHref={`/admin/cursos/${userId}`}
+    />
+  );
 }
 
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
