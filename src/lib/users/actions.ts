@@ -23,6 +23,22 @@ export async function createUser(data: any): Promise<ActionResult> {
     if (!data.password) {
       return { success: false, error: "La contraseña es requerida para nuevos usuarios" };
     }
+
+    // Verificar si el email o username ya existen antes de intentar crear
+    // Esto evita que el ID autoincrementable aumente innecesariamente en PostgreSQL
+    const existingUser = await prisma.user.findFirst({
+      where: {
+        OR: [
+          { email: validated.data.email },
+          { username: validated.data.username }
+        ]
+      }
+    });
+
+    if (existingUser) {
+      const field = existingUser.email === validated.data.email ? "email" : "nombre de usuario";
+      return { success: false, error: `El ${field} ya está registrado.` };
+    }
     
     const hashedPassword = await bcrypt.hash(data.password, 10);
 
@@ -58,6 +74,25 @@ export async function updateUser(id: number, data: any): Promise<ActionResult> {
 
   try {
     const updateData = { ...validated.data };
+
+    // Verificar si el email o username ya existen en otro usuario
+    const orConditions = [];
+    if (validated.data.email) orConditions.push({ email: validated.data.email });
+    if (validated.data.username) orConditions.push({ username: validated.data.username });
+
+    if (orConditions.length > 0) {
+      const existingUser = await prisma.user.findFirst({
+        where: {
+          OR: orConditions,
+          NOT: { id }
+        }
+      });
+
+      if (existingUser) {
+        const field = existingUser.email === validated.data.email ? "email" : "nombre de usuario";
+        return { success: false, error: `El ${field} ya está en uso por otro usuario.` };
+      }
+    }
 
     // Si hay una nueva contraseña, hashearla
     if (data.password && data.password.trim() !== "") {
