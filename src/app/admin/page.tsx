@@ -13,7 +13,7 @@ import {
   FiTarget,
   FiAward,
 } from "react-icons/fi";
-import Link from "next/link";
+import LazyLink from "@/components/ui/LazyLink";
 import { cn } from "@/utils/cn.utils";
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -166,12 +166,12 @@ const AdminPage = async () => {
               </div>
             </div>
 
-            <Link
+            <LazyLink
               href={stat.link}
               className="mt-5 flex items-center gap-1.5 text-xs font-semibold text-primary opacity-0 group-hover:opacity-100 transition-all duration-300 -translate-x-2 group-hover:translate-x-0"
             >
               Gestionar <FiArrowRight />
-            </Link>
+            </LazyLink>
 
             <div
               className={cn(
@@ -228,7 +228,7 @@ const AdminPage = async () => {
               </h2>
               <div className="rounded-2xl bg-surface-card border border-black/5 dark:border-white/5 shadow-sm overflow-hidden">
                 {alerts.map((alert, i) => (
-                  <Link
+                  <LazyLink
                     key={i}
                     href={alert.href}
                     className="flex items-center gap-3 px-5 py-4 hover:bg-surface-low/30 transition-colors group"
@@ -237,7 +237,7 @@ const AdminPage = async () => {
                     <span className="flex-1 text-sm text-foreground">{alert.label}</span>
                     <span className="text-sm font-bold text-error">{alert.count}</span>
                     <FiArrowRight size={14} className="text-foreground-muted opacity-0 group-hover:opacity-100 transition-opacity" />
-                  </Link>
+                  </LazyLink>
                 ))}
               </div>
             </div>
@@ -269,7 +269,7 @@ const AdminPage = async () => {
           <h2 className="text-xl font-bold text-foreground flex items-center gap-2">
             <FiUserPlus className="text-primary" /> Usuarios Recientes
           </h2>
-          <Link href="/admin/usuarios" className="text-sm font-medium text-primary hover:underline">Ver todos</Link>
+          <LazyLink href="/admin/usuarios" className="text-sm font-medium text-primary hover:underline">Ver todos</LazyLink>
         </div>
         <div className="rounded-2xl bg-surface-card border border-black/5 dark:border-white/5 overflow-hidden shadow-sm">
           <div className="overflow-x-auto">
