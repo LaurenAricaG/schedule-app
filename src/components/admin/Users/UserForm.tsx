@@ -5,16 +5,8 @@ import { createUser, updateUser } from "@/lib/users/actions";
 import { toast } from "sonner";
 import { FiUser, FiMail, FiLock, FiShield, FiTag } from "react-icons/fi";
 import { InputField, SelectField } from "@/components/ui/Form/Fields";
-import { z } from "zod";
 
-const UserSchema = z.object({
-  name: z.string().trim().min(1, "El nombre es requerido"),
-  lastname: z.string().trim().optional(),
-  email: z.string().trim().min(1, "El email es requerido").email("Email inválido"),
-  username: z.string().trim().min(1, "El usuario es requerido").min(3, "Mínimo 3 caracteres"),
-  password: z.string().optional(),
-  rolId: z.union([z.string(), z.number()]).refine(val => val !== "", "El rol es requerido"),
-});
+import { UserSchema } from "@/lib/users/schemas";
 
 interface UserFormProps {
   initialData?: any;
@@ -30,7 +22,7 @@ export function UserForm({ initialData, roles, onClose }: UserFormProps) {
     lastname: initialData?.lastname || "",
     email: initialData?.email || "",
     username: initialData?.username || "",
-    password: "", 
+    password: "",
     rolId: initialData?.rolId || (roles.length > 0 ? roles[0].id : ""),
   });
 
@@ -49,8 +41,8 @@ export function UserForm({ initialData, roles, onClose }: UserFormProps) {
 
     // Validación manual adicional para password en creación
     if (!initialData && (!formData.password || formData.password.length < 6)) {
-      newErrors.password = formData.password 
-        ? "La contraseña debe tener al menos 6 caracteres" 
+      newErrors.password = formData.password
+        ? "La contraseña debe tener al menos 6 caracteres"
         : "La contraseña es obligatoria";
     }
 
@@ -90,13 +82,23 @@ export function UserForm({ initialData, roles, onClose }: UserFormProps) {
       }
 
       if (result.success) {
-        toast.success(`Usuario ${initialData ? "actualizado" : "creado"} con éxito`);
+        toast.success(
+          `Usuario ${initialData ? "actualizado" : "creado"} con éxito`,
+        );
         onClose();
       } else {
         toast.error(result.error);
         // Si el error es de duplicado, marcarlo en el campo correspondiente
-        if (result.error?.includes("email")) setErrors(prev => ({ ...prev, email: "Este email ya está registrado" }));
-        if (result.error?.includes("usuario")) setErrors(prev => ({ ...prev, username: "Este nombre de usuario ya existe" }));
+        if (result.error?.includes("email"))
+          setErrors((prev) => ({
+            ...prev,
+            email: "Este email ya está registrado",
+          }));
+        if (result.error?.includes("usuario"))
+          setErrors((prev) => ({
+            ...prev,
+            username: "Este nombre de usuario ya existe",
+          }));
       }
     } catch (error) {
       toast.error("Ocurrió un error inesperado");
@@ -105,7 +107,7 @@ export function UserForm({ initialData, roles, onClose }: UserFormProps) {
     }
   };
 
-  const roleOptions = roles.map(r => ({ value: r.id, label: r.rol }));
+  const roleOptions = roles.map((r) => ({ value: r.id, label: r.rol }));
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5 sm:space-y-6">
@@ -129,7 +131,9 @@ export function UserForm({ initialData, roles, onClose }: UserFormProps) {
           id="user-lastname"
           icon={FiTag}
           value={formData.lastname}
-          onChange={(e) => setFormData({ ...formData, lastname: e.target.value })}
+          onChange={(e) =>
+            setFormData({ ...formData, lastname: e.target.value })
+          }
           error={errors.lastname}
           placeholder="Ej. Pérez"
         />
@@ -188,7 +192,9 @@ export function UserForm({ initialData, roles, onClose }: UserFormProps) {
           if (errors.password) setErrors({ ...errors, password: "" });
         }}
         error={errors.password}
-        placeholder={initialData ? "Dejar en blanco para no cambiar" : "••••••••"}
+        placeholder={
+          initialData ? "Dejar en blanco para no cambiar" : "••••••••"
+        }
       />
 
       <div className="flex items-center justify-end gap-3 pt-4 sm:pt-6 border-t border-black/5 dark:border-white/5">
@@ -205,7 +211,11 @@ export function UserForm({ initialData, roles, onClose }: UserFormProps) {
           disabled={isSubmitting}
           className="rounded-lg bg-primary px-6 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-60 shadow-lg shadow-primary/20"
         >
-          {isSubmitting ? "Procesando..." : initialData ? "Actualizar Usuario" : "Crear Usuario"}
+          {isSubmitting
+            ? "Procesando..."
+            : initialData
+              ? "Actualizar Usuario"
+              : "Crear Usuario"}
         </button>
       </div>
     </form>
