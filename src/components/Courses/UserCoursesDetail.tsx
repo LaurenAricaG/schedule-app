@@ -9,6 +9,9 @@ import { useRouter } from "next/navigation";
 import UserSchedule from "./UserSchedule";
 import Title from "@/components/ui/Title";
 import LazyLink from "@/components/ui/LazyLink";
+import Modal from "@/components/ui/Modal";
+import { CourseForm } from "@/components/admin/Courses/CourseForm";
+import { ScheduleForm } from "@/components/admin/Courses/ScheduleForm";
 
 type CoursesByUserResponse = {
   user: Partial<User> | null;
@@ -25,6 +28,7 @@ export default function UserCoursesDetail({
   initialView = "courses",
   scheduleHref = "/panel/horario",
   coursesHref = "/panel/cursos",
+  initialSchedules = [],
 }: {
   userId: number;
   initialData: CoursesByUserResponse;
@@ -34,8 +38,10 @@ export default function UserCoursesDetail({
   initialView?: "courses" | "schedule";
   scheduleHref?: string;
   coursesHref?: string;
+  initialSchedules?: any[];
 }) {
   const [view, setView] = useState<"courses" | "schedule">(initialView);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const router = useRouter();
 
   const totalItems = initialData.total || 0;
@@ -91,7 +97,10 @@ export default function UserCoursesDetail({
             </button>
           )}
           {isAdmin && (
-            <button className="inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-white hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 ghost-border cursor-pointer">
+            <button 
+              onClick={() => setIsModalOpen(true)}
+              className="inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-white hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 ghost-border cursor-pointer"
+            >
               <FiPlus size={18} />
               {view === "courses" ? "Nuevo curso" : "Añadir horario"}
             </button>
@@ -133,8 +142,30 @@ export default function UserCoursesDetail({
           userId={userId}
           userName={initialData.user?.name ?? ""}
           userLastname={initialData.user?.lastname ?? ""}
+          initialSchedules={initialSchedules}
+          isAdmin={isAdmin}
         />
       )}
+
+      {/* Admin Action Modal */}
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        title={view === "courses" ? "Añadir Nuevo Curso" : "Añadir Horario"}
+        maxWidth={view === "courses" ? "max-w-md" : "max-w-lg"}
+      >
+        {view === "courses" ? (
+          <CourseForm 
+            userId={userId} 
+            onClose={() => setIsModalOpen(false)} 
+          />
+        ) : (
+          <ScheduleForm 
+            courses={initialData.courses}
+            onClose={() => setIsModalOpen(false)} 
+          />
+        )}
+      </Modal>
     </div>
   );
 }

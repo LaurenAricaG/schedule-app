@@ -3,8 +3,6 @@ import UserCoursesDetail from "@/components/Courses/UserCoursesDetail";
 import { ErrorBoundary } from "@/components/error/ErrorBoundary";
 import { getCoursesByUser, getScheduleByUser } from "@/lib/courses";
 import { ScheduleSkeleton } from "@/components/ui/Skeletons";
-import { auth } from "@/lib/auth";
-import { redirect } from "next/navigation";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 
 async function ScheduleLoader({ userId }: { userId: number }) {
@@ -24,23 +22,30 @@ async function ScheduleLoader({ userId }: { userId: number }) {
       userId={userId}
       initialData={initialData}
       initialSchedules={initialSchedules}
-      isAdmin={false}
+      isAdmin={true}
       isRouted={true}
       initialView="schedule"
+      scheduleHref={`/admin/cursos/${userId}/horario`}
+      coursesHref={`/admin/cursos/${userId}`}
     />
   );
 }
 
-export default async function PanelSchedulePage() {
-  const session = await auth();
-  if (!session) redirect("/login");
-
-  const userId = parseInt(session.user.id);
+export default async function AdminUserSchedulePage(props: {
+  params: Promise<{ userId: string }>;
+}) {
+  const params = await props.params;
+  const userId = parseInt(params.userId);
 
   return (
     <section className="space-y-6">
       <Breadcrumbs
-        items={[{ label: "Panel", href: "/panel" }, { label: "Mi Horario" }]}
+        items={[
+          { label: "Admin", href: "/admin" },
+          { label: "Cursos", href: "/admin/cursos" },
+          { label: "Lista de cursos", href: `/admin/cursos/${userId}` },
+          { label: "Horario" },
+        ]}
       />
 
       <ErrorBoundary variant="compact" title="No se pudo cargar el horario">

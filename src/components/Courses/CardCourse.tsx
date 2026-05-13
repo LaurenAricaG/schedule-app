@@ -10,6 +10,8 @@ import { toast } from "sonner";
 import { cn } from "@/utils/cn.utils";
 import { deleteCourse, restoreCourse } from "@/lib/courses/actions";
 import LazyLink from "@/components/ui/LazyLink";
+import Modal from "@/components/ui/Modal";
+import { CourseForm } from "@/components/admin/Courses/CourseForm";
 
 type CardCourseProps = {
   course: Course;
@@ -20,6 +22,7 @@ type CardCourseProps = {
 export default function CardCourse({ course, onSuccess, isAdmin = false }: CardCourseProps) {
   const [isPending, startTransition] = useTransition();
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
   const deleted = course.deletedAt !== null;
 
   const handleDelete = () => {
@@ -86,7 +89,7 @@ export default function CardCourse({ course, onSuccess, isAdmin = false }: CardC
 
           {isAdmin && (
             <div className="flex gap-1">
-              <ActionButton onClick={() => {}}>
+              <ActionButton onClick={() => setEditOpen(true)}>
                 <FiEdit2 size={13} />
               </ActionButton>
 
@@ -174,6 +177,22 @@ export default function CardCourse({ course, onSuccess, isAdmin = false }: CardC
         iconClassName="bg-error/10 text-error"
         isPending={isPending}
       />
+
+      <Modal
+        isOpen={editOpen}
+        onClose={() => setEditOpen(false)}
+        title="Editar Curso"
+        maxWidth="max-w-md"
+      >
+        <CourseForm 
+          userId={course.userId}
+          initialData={course}
+          onClose={() => {
+            setEditOpen(false);
+            onSuccess();
+          }} 
+        />
+      </Modal>
     </>
   );
 }

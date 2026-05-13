@@ -1,13 +1,5 @@
-import { Course } from "@/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
-import { User } from "@/types/definitions";
 import { ActionResult } from "@/types/definitions";
-
-type GetCoursesByUserResponse = ActionResult<{
-  user: Partial<User> | null;
-  courses: Course[];
-  total: number;
-}>;
 
 // ── Usuarios con cantidad de cursos ───────────────────
 export async function getUsersWithCoursesCount(
@@ -52,48 +44,6 @@ export async function getUsersWithCoursesCount(
       success: false,
       error: "No se pudieron cargar los usuarios",
     };
-  }
-}
-
-// ── Leer cursos por usuario ────────────────────────────
-export async function getCoursesByUser(
-  userId: number,
-  page: number = 1,
-  limit: number = 6,
-): Promise<GetCoursesByUserResponse> {
-  try {
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-      select: {
-        id: true,
-        name: true,
-        lastname: true,
-        email: true,
-      },
-    });
-
-    const skip = (page - 1) * limit;
-
-    const [courses, total] = await Promise.all([
-      prisma.course.findMany({
-        where: { userId },
-        orderBy: { createdAt: "asc" },
-        skip,
-        take: limit,
-      }),
-      prisma.course.count({ where: { userId } }),
-    ]);
-
-    return {
-      success: true,
-      data: {
-        user,
-        courses,
-        total,
-      },
-    };
-  } catch {
-    return { success: false, error: "No se pudieron cargar los cursos" };
   }
 }
 

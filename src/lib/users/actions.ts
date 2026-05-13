@@ -4,16 +4,8 @@ import { prisma } from "@/lib/prisma";
 import { ActionResult } from "@/types/definitions";
 import { revalidatePath } from "next/cache";
 import bcrypt from "bcryptjs";
-import { z } from "zod";
 
-const UserSchema = z.object({
-  name: z.string().min(1, "El nombre es requerido"),
-  lastname: z.string().optional(),
-  email: z.string().email("Email inválido").min(1, "El email es requerido"),
-  username: z.string().min(3, "El usuario debe tener al menos 3 caracteres").min(1, "El usuario es requerido"),
-  password: z.string().min(6, "La contraseña debe tener al menos 6 caracteres").optional().or(z.literal("")),
-  rolId: z.coerce.number().min(1, "El rol es requerido"),
-});
+import { UserSchema } from "./schemas";
 
 // ── Crear ──────────────────────────────────────────────
 /**
