@@ -5,11 +5,49 @@ import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { ActionResult } from "@/types/definitions";
 
-const CourseSchema = z.object({
-  name: z.string().min(1, { message: "El nombre del curso es requerido." }),
-  teacher: z.string().min(1, { message: "El profesor es requerido." }),
-  color: z.string().optional(),
-});
+import { CourseSchema } from "./schemas";
+
+// ── Leer cursos por usuario ────────────────────────────
+export async function getCoursesByUser(
+  userId: number,
+  page: number = 1,
+  limit: number = 6,
+): Promise<ActionResult<any>> {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        id: true,
+        name: true,
+        lastname: true,
+        email: true,
+      },
+    });
+
+    const skip = (page - 1) * limit;
+
+    const [courses, total] = await Promise.all([
+      prisma.course.findMany({
+        where: { userId },
+        orderBy: { createdAt: "asc" },
+        skip,
+        take: limit,
+      }),
+      prisma.course.count({ where: { userId } }),
+    ]);
+
+    return {
+      success: true,
+      data: {
+        user,
+        courses,
+        total,
+      },
+    };
+  } catch {
+    return { success: false, error: "No se pudieron cargar los cursos" };
+  }
+}
 
 // ── Horario por usuario ────────────────────────────────
 export async function getScheduleByUser(
@@ -49,9 +87,6 @@ export async function getScheduleByUser(
 // ── Crear ──────────────────────────────────────────────
 /**
  * Crea un nuevo curso asignado a un usuario específico.
- * @param {number} userId - El ID del usuario al que se le asignará el curso.
- * @param {z.infer<typeof CourseSchema>} data - Datos validados del curso.
- * @returns {Promise<ActionResult>} Resultado de la creación.
  */
 export async function createCourse(
   userId: number,
@@ -62,8 +97,7 @@ export async function createCourse(
   if (!validated.success) {
     return {
       success: false,
-      error:
-        validated.error.flatten().fieldErrors.name?.[0] ?? "Datos inválidos.",
+      error: validated.error.issues[0].message,
     };
   }
 
@@ -84,9 +118,6 @@ export async function createCourse(
 // ── Editar ─────────────────────────────────────────────
 /**
  * Actualiza los datos de un curso existente.
- * @param {number} id - ID del curso a editar.
- * @param {Partial<z.infer<typeof CourseSchema>>} data - Datos a actualizar.
- * @returns {Promise<ActionResult>} Resultado de la actualización.
  */
 export async function updateCourse(
   id: number,
@@ -97,16 +128,16 @@ export async function updateCourse(
   if (!validated.success) {
     return {
       success: false,
-      error: "Datos inválidos.",
+      error: validated.error.issues[0].message,
     };
   }
 
   try {
-    await prisma.course.update({
+    const course = await prisma.course.update({
       where: { id },
       data: validated.data,
     });
-    revalidatePath(`/admin/cursos`);
+    revalidatePath(`/admin/cursos/${course.userId}`);
     return { success: true, data: undefined };
   } catch {
     return { success: false, error: "No se pudo actualizar el curso." };
