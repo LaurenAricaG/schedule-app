@@ -1,3 +1,4 @@
+import { useState, useRef, useEffect } from "react";
 import { IconType } from "react-icons";
 import { cn } from "@/utils/cn.utils";
 
@@ -20,28 +21,30 @@ export function InputField({
     <div className={cn("w-full", className)}>
       <label
         htmlFor={id}
-        className="block text-xs font-medium uppercase tracking-wide text-foreground-muted mb-2"
+        className="block text-xs font-medium uppercase tracking-wide text-foreground-muted mb-2 ml-1"
       >
         {label}
       </label>
       <div className="relative group">
         {Icon && (
-          <div className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground-muted/40 transition-colors">
-            <Icon size={16} />
+          <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-foreground-muted/30 transition-colors group-focus-within:text-primary/70 pointer-events-none">
+            <Icon size={18} />
           </div>
         )}
         <input
           id={id}
           className={cn(
-            "w-full rounded-lg border border-black/8 bg-surface py-3 text-sm text-foreground outline-none transition-colors focus:border-primary dark:border-white/10",
-            Icon ? "pl-10 pr-3" : "px-3",
-            error && "border-error focus:border-error",
-            props.disabled && "opacity-60 cursor-not-allowed",
+            "w-full rounded-xl border border-black/8 bg-surface-card py-3.5 text-sm text-foreground outline-none transition-all duration-200",
+            "hover:border-black/20 hover:bg-surface-low/50",
+            "focus:border-primary focus:ring-4 focus:ring-primary/5 dark:border-white/10 dark:hover:border-white/20 dark:focus:border-primary/50",
+            Icon ? "pl-11 pr-4" : "px-4",
+            error && "border-error focus:border-error focus:ring-error/5",
+            props.disabled && "opacity-60 cursor-not-allowed bg-surface-low",
           )}
           {...props}
         />
       </div>
-      {error && <p className="mt-1 text-xs text-error">{error}</p>}
+      {error && <p className="mt-1.5 text-xs font-medium text-error ml-1">{error}</p>}
     </div>
   );
 }
@@ -63,19 +66,21 @@ export function TextAreaField({
     <div className={cn("w-full", className)}>
       <label
         htmlFor={id}
-        className="block text-xs font-medium uppercase tracking-wide text-foreground-muted mb-2"
+        className="block text-xs font-medium uppercase tracking-wide text-foreground-muted mb-2 ml-1"
       >
         {label}
       </label>
       <textarea
         id={id}
         className={cn(
-          "w-full min-h-30 rounded-lg border border-black/8 bg-surface px-3 py-3 text-sm text-foreground outline-none transition-colors focus:border-primary dark:border-white/10 resize-none",
-          error && "border-error focus:border-error",
+          "w-full min-h-32 rounded-xl border border-black/8 bg-surface-card px-4 py-3.5 text-sm text-foreground outline-none transition-all duration-200",
+          "hover:border-black/20 hover:bg-surface-low/50",
+          "focus:border-primary focus:ring-4 focus:ring-primary/5 dark:border-white/10 dark:hover:border-white/20 dark:focus:border-primary/50 resize-none",
+          error && "border-error focus:border-error focus:ring-error/5",
         )}
         {...props}
       />
-      {error && <p className="mt-1 text-xs text-error">{error}</p>}
+      {error && <p className="mt-1.5 text-xs font-medium text-error ml-1">{error}</p>}
     </div>
   );
 }
@@ -97,18 +102,18 @@ export function CheckboxField({
     <label
       htmlFor={id}
       className={cn(
-        "flex items-center gap-3 px-4 h-12 rounded-lg cursor-pointer transition-all duration-300",
+        "flex items-center gap-3 px-4 h-12 rounded-xl cursor-pointer transition-all duration-300 border",
         checked
-          ? "bg-primary/10 text-primary font-bold"
-          : "bg-surface border border-black/8 dark:border-white/10 text-foreground-muted hover:bg-surface-low",
+          ? "bg-primary/5 border-primary/20 text-primary font-semibold"
+          : "bg-surface-card border-black/5 dark:border-white/5 text-foreground-muted hover:bg-surface-low hover:border-black/10",
       )}
     >
       <div
         className={cn(
-          "w-5 h-5 rounded-md border-2 flex items-center justify-center transition-all",
+          "w-5 h-5 rounded-lg border-2 flex items-center justify-center transition-all duration-200",
           checked
-            ? "bg-primary border-primary"
-            : "border-foreground-muted/20 bg-surface-card",
+            ? "bg-primary border-primary scale-110 shadow-lg shadow-primary/20"
+            : "border-foreground-muted/20 bg-surface",
         )}
       >
         {checked && (
@@ -134,60 +139,89 @@ export function CheckboxField({
         onChange={(e) => onChange(e.target.checked)}
         className="hidden"
       />
-      <span className="text-xs uppercase tracking-wide">{label}</span>
+      <span className="text-xs uppercase tracking-wide font-medium">{label}</span>
     </label>
   );
 }
-interface SelectFieldProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
+
+interface SelectFieldProps {
   label: string;
   options: { value: string | number; label: string }[];
+  value: string | number;
+  onChange: (value: string | number) => void;
   icon?: IconType;
   error?: string;
   className?: string;
+  id?: string;
+  placeholder?: string;
 }
 
 export function SelectField({
   label,
   options,
+  value,
+  onChange,
   icon: Icon,
   error,
   className,
   id,
-  ...props
+  placeholder = "Seleccionar...",
 }: SelectFieldProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const selectedOption = options.find((opt) => opt.value === value);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   return (
-    <div className={cn("w-full", className)}>
+    <div className={cn("w-full", className)} ref={containerRef}>
       <label
         htmlFor={id}
-        className="block text-xs font-medium uppercase tracking-wide text-foreground-muted mb-2"
+        className="block text-xs font-medium uppercase tracking-wide text-foreground-muted mb-2 ml-1"
       >
         {label}
       </label>
       <div className="relative group">
-        {Icon && (
-          <div className="absolute left-3 top-1/2 -translate-y-1/2 text-foreground-muted/40 transition-colors pointer-events-none">
-            <Icon size={16} />
-          </div>
-        )}
-        <select
+        {/* Trigger Button */}
+        <button
+          type="button"
           id={id}
+          onClick={() => setIsOpen(!isOpen)}
           className={cn(
-            "w-full rounded-lg border border-black/8 bg-surface py-3 text-sm text-foreground outline-none transition-colors focus:border-primary dark:border-white/10 appearance-none cursor-pointer",
-            Icon ? "pl-10 pr-10" : "px-3 pr-10",
-            error && "border-error focus:border-error",
-            props.disabled && "opacity-60 cursor-not-allowed",
+            "w-full flex items-center justify-between rounded-xl border border-black/8 bg-surface-card py-3.5 text-sm text-foreground outline-none transition-all duration-200",
+            "hover:border-black/20 hover:bg-surface-low/50",
+            "focus:border-primary focus:ring-4 focus:ring-primary/5 dark:border-white/10 dark:hover:border-white/20 dark:focus:border-primary/50",
+            Icon ? "pl-11 pr-4" : "px-4",
+            error && "border-error focus:border-error focus:ring-error/5",
           )}
-          {...props}
         >
-          {options.map((opt) => (
-            <option key={opt.value} value={opt.value}>
-              {opt.label}
-            </option>
-          ))}
-        </select>
-        <div className="absolute right-3 top-1/2 -translate-y-1/2 text-foreground-muted/40 pointer-events-none">
+          <div className="flex items-center gap-3">
+            {Icon && (
+              <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-foreground-muted/30 transition-colors group-focus-within:text-primary/70 pointer-events-none">
+                <Icon size={18} />
+              </div>
+            )}
+            <span className={cn(!selectedOption && "text-foreground-muted/60")}>
+              {selectedOption ? selectedOption.label : placeholder}
+            </span>
+          </div>
           <svg
-            className="w-4 h-4"
+            className={cn(
+              "w-4 h-4 text-foreground-muted/30 transition-transform duration-200",
+              isOpen && "rotate-180 text-primary/70",
+            )}
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -195,13 +229,56 @@ export function SelectField({
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
-              strokeWidth="2"
+              strokeWidth="2.5"
               d="M19 9l-7 7-7-7"
             />
           </svg>
-        </div>
+        </button>
+
+        {/* Dropdown Menu */}
+        {isOpen && (
+          <div className="absolute z-50 w-full mt-2 py-1.5 overflow-hidden rounded-xl border border-black/8 bg-surface-card shadow-2xl shadow-black/10 dark:border-white/10 animate-in fade-in zoom-in duration-150 origin-top">
+            <div className="max-h-60 overflow-y-auto scrollbar-thin scrollbar-thumb-black/10">
+              {options.map((opt) => (
+                <button
+                  key={opt.value}
+                  type="button"
+                  onClick={() => {
+                    onChange(opt.value);
+                    setIsOpen(false);
+                  }}
+                  className={cn(
+                    "w-full flex items-center justify-between px-4 py-2.5 text-sm transition-colors text-left",
+                    opt.value === value
+                      ? "bg-primary/10 text-primary font-semibold"
+                      : "text-foreground hover:bg-surface-low dark:hover:bg-white/5",
+                  )}
+                >
+                  {opt.label}
+                  {opt.value === value && (
+                    <svg
+                      className="w-4 h-4 text-primary"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth="3"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                  )}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
-      {error && <p className="mt-1 text-xs text-error">{error}</p>}
+      {error && (
+        <p className="mt-1.5 text-xs font-medium text-error ml-1">{error}</p>
+      )}
     </div>
   );
 }

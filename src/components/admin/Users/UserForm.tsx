@@ -172,8 +172,8 @@ export function UserForm({ initialData, roles, onClose }: UserFormProps) {
           id="user-role"
           icon={FiShield}
           value={formData.rolId}
-          onChange={(e) => {
-            setFormData({ ...formData, rolId: e.target.value });
+          onChange={(val) => {
+            setFormData({ ...formData, rolId: val });
             if (errors.rolId) setErrors({ ...errors, rolId: "" });
           }}
           error={errors.rolId}

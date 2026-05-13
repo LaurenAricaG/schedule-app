@@ -136,7 +136,7 @@ export function ScheduleForm({
         id="schedule-course"
         icon={FiBook}
         value={formData.courseId}
-        onChange={(e) => setFormData({ ...formData, courseId: e.target.value })}
+        onChange={(val) => setFormData({ ...formData, courseId: val })}
         options={courseOptions}
         error={errors.courseId}
       />
@@ -146,8 +146,8 @@ export function ScheduleForm({
         id="schedule-day"
         icon={FiCalendar}
         value={formData.dayOfWeek}
-        onChange={(e) =>
-          setFormData({ ...formData, dayOfWeek: e.target.value as DayOfWeek })
+        onChange={(val) =>
+          setFormData({ ...formData, dayOfWeek: val as DayOfWeek })
         }
         options={DAYS_OPTIONS}
         error={errors.dayOfWeek}
