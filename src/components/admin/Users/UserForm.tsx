@@ -11,10 +11,11 @@ import { UserSchema } from "@/lib/users/schemas";
 interface UserFormProps {
   initialData?: any;
   roles: { id: number; rol: string }[];
+  apoderados: { id: number; name: string; lastname: string | null }[];
   onClose: () => void;
 }
 
-export function UserForm({ initialData, roles, onClose }: UserFormProps) {
+export function UserForm({ initialData, roles, apoderados, onClose }: UserFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [formData, setFormData] = useState({
@@ -24,6 +25,7 @@ export function UserForm({ initialData, roles, onClose }: UserFormProps) {
     username: initialData?.username || "",
     password: "",
     rolId: initialData?.rolId || (roles.length > 0 ? roles[0].id : ""),
+    apoderadoId: initialData?.apoderadoId || "",
   });
 
   const validate = () => {
@@ -65,12 +67,16 @@ export function UserForm({ initialData, roles, onClose }: UserFormProps) {
 
     setIsSubmitting(true);
     try {
+      const estudianteRole = roles.find((r) => r.rol === "estudiante");
+      const showApoderadoSelect = Number(formData.rolId) === estudianteRole?.id;
+
       const data = {
         name: formData.name,
         lastname: formData.lastname,
         email: formData.email,
         username: formData.username,
         rolId: Number(formData.rolId),
+        apoderadoId: showApoderadoSelect && formData.apoderadoId !== "" ? Number(formData.apoderadoId) : null,
         ...(formData.password ? { password: formData.password } : {}),
       };
 
@@ -108,6 +114,8 @@ export function UserForm({ initialData, roles, onClose }: UserFormProps) {
   };
 
   const roleOptions = roles.map((r) => ({ value: r.id, label: r.rol }));
+  const estudianteRole = roles.find((r) => r.rol === "estudiante");
+  const showApoderadoSelect = Number(formData.rolId) === estudianteRole?.id;
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5 sm:space-y-6">
@@ -180,6 +188,25 @@ export function UserForm({ initialData, roles, onClose }: UserFormProps) {
           options={roleOptions}
         />
       </div>
+
+      {showApoderadoSelect && (
+        <SelectField
+          label="Apoderado del Estudiante"
+          id="user-apoderado"
+          icon={FiUser}
+          value={formData.apoderadoId}
+          onChange={(val) => {
+            setFormData({ ...formData, apoderadoId: val });
+          }}
+          options={[
+            { value: "", label: "Ninguno (Sin apoderado)" },
+            ...apoderados.map((a) => ({
+              value: a.id,
+              label: `${a.name} ${a.lastname || ""}`.trim(),
+            })),
+          ]}
+        />
+      )}
 
       <InputField
         label={initialData ? "Nueva Contraseña (opcional)" : "Contraseña"}

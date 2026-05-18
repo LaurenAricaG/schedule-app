@@ -44,7 +44,15 @@ function UserAvatar({
   );
 }
 
-const TableUsers = ({ users, roles }: { users: UserWithRolDTO[]; roles: any[] }) => {
+const TableUsers = ({
+  users,
+  roles,
+  apoderados,
+}: {
+  users: UserWithRolDTO[];
+  roles: any[];
+  apoderados: any[];
+}) => {
   const [isPending, startTransition] = useTransition();
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
@@ -219,6 +227,7 @@ const TableUsers = ({ users, roles }: { users: UserWithRolDTO[]; roles: any[] })
         <UserForm
           initialData={selectedUser}
           roles={roles}
+          apoderados={apoderados}
           onClose={() => setEditOpen(false)}
         />
       </Modal>

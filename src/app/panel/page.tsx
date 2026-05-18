@@ -1,4 +1,4 @@
-import { getUserDashboardData } from "@/lib/panel/actions";
+import { getUserDashboardData, getApoderadoStudents } from "@/lib/panel/actions";
 import { auth } from "@/lib/auth";
 import {
   FiCheckCircle,
@@ -13,6 +13,7 @@ import {
 } from "react-icons/fi";
 import LazyLink from "@/components/ui/LazyLink";
 import { cn } from "@/utils/cn.utils";
+import { ApoderadoDashboard } from "@/components/panel/ApoderadoDashboard";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Helpers
@@ -27,9 +28,16 @@ function isUrgent(dueDate: Date | string): boolean {
 const PanelPage = async () => {
   const session = await auth();
   const role = session?.user?.rol;
-  const isSpecialRole = role === "docente" || role === "apoderado";
 
-  if (isSpecialRole) {
+  if (role === "apoderado") {
+    const studentsResult = await getApoderadoStudents();
+    const students = studentsResult.success ? (studentsResult.data ?? []) : [];
+    return (
+      <ApoderadoDashboard initialStudents={students} session={session} />
+    );
+  }
+
+  if (role === "docente") {
     const roleColors: Record<string, { bg: string, text: string, border: string, badge: string, iconBg: string }> = {
       docente: {
         bg: "from-orange-500/10 to-amber-500/5 dark:from-orange-500/20 dark:to-amber-500/10",
@@ -37,13 +45,6 @@ const PanelPage = async () => {
         border: "border-orange-500/20 dark:border-orange-500/30",
         badge: "bg-orange-500/10 text-orange-600 dark:bg-orange-500/20 dark:text-orange-400 border-orange-500/20",
         iconBg: "bg-orange-500 text-white shadow-lg shadow-orange-500/20",
-      },
-      apoderado: {
-        bg: "from-pink-500/10 to-purple-500/5 dark:from-pink-500/20 dark:to-purple-500/10",
-        text: "text-pink-600 dark:text-pink-400",
-        border: "border-pink-500/20 dark:border-pink-500/30",
-        badge: "bg-pink-500/10 text-pink-600 dark:bg-pink-500/20 dark:text-pink-400 border-pink-500/20",
-        iconBg: "bg-pink-500 text-white shadow-lg shadow-pink-500/20",
       }
     };
 
@@ -54,8 +55,6 @@ const PanelPage = async () => {
       badge: "bg-primary/10 text-primary border-primary/20",
       iconBg: "bg-primary text-white shadow-lg shadow-primary/20",
     };
-
-    const roleNameFriendly = role === "docente" ? "Docente" : role === "apoderado" ? "Apoderado" : role;
 
     return (
       <div className="space-y-8 animate-in fade-in duration-700 pb-12">
@@ -69,7 +68,7 @@ const PanelPage = async () => {
               ¡Qué bueno verte, {session?.user?.name?.split(" ")[0]}!
             </h1>
             <p className="text-foreground-muted text-lg">
-              Has iniciado sesión con el rol de <span className={`font-bold border px-2.5 py-0.5 rounded-lg text-sm uppercase tracking-wide ${currentColors.badge}`}>{roleNameFriendly}</span>.
+              Has iniciado sesión con el rol de <span className={`font-bold border px-2.5 py-0.5 rounded-lg text-sm uppercase tracking-wide ${currentColors.badge}`}>Docente</span>.
             </p>
           </div>
         </div>
@@ -92,7 +91,7 @@ const PanelPage = async () => {
               <div className="flex-1 space-y-4 text-center sm:text-left">
                 <div>
                   <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-[10px] font-black uppercase tracking-wider ${currentColors.badge}`}>
-                    {roleNameFriendly}
+                    Docente
                   </span>
                   <h2 className="text-3xl font-black text-foreground mt-2 leading-tight">
                     {session?.user?.name} {session?.user?.lastname}
@@ -117,7 +116,7 @@ const PanelPage = async () => {
           <div className="mt-8 text-center p-8 bg-surface-card border border-black/5 dark:border-white/5 rounded-3xl">
             <h3 className="text-lg font-bold text-foreground">Bienvenido a Schedule App</h3>
             <p className="text-foreground-muted mt-2 text-sm max-w-md mx-auto leading-relaxed">
-              Como {roleNameFriendly.toLowerCase()}, tu cuenta está activa y configurada correctamente. Actualmente, tu vista no incluye cursos ni asignaciones académicas directas.
+              Como docente, tu cuenta está activa y configurada correctamente. Actualmente, tu vista no incluye cursos ni asignaciones académicas directas.
             </p>
           </div>
         </div>
