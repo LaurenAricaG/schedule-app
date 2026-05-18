@@ -41,4 +41,32 @@ export async function getUsers(
   }
 }
 
+export async function getApoderados() {
+  try {
+    const apoderados = await prisma.user.findMany({
+      where: {
+        rol: {
+          rol: "apoderado",
+        },
+        deletedAt: null,
+        status: true,
+      },
+      select: {
+        id: true,
+        name: true,
+        lastname: true,
+      },
+      orderBy: {
+        name: "asc",
+      },
+    });
+    return { success: true, data: apoderados };
+  } catch (error) {
+    return {
+      success: false,
+      error: "No se pudieron cargar los apoderados",
+    };
+  }
+}
+
 export * from "./actions";

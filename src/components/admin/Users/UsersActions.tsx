@@ -7,9 +7,10 @@ import { UserForm } from "./UserForm";
 
 interface UsersActionsProps {
   roles: any[];
+  apoderados: any[];
 }
 
-export function UsersActions({ roles }: UsersActionsProps) {
+export function UsersActions({ roles, apoderados }: UsersActionsProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -29,7 +30,7 @@ export function UsersActions({ roles }: UsersActionsProps) {
         title="Crear Nuevo Usuario"
         maxWidth="max-w-2xl"
       >
-        <UserForm roles={roles} onClose={() => setIsOpen(false)} />
+        <UserForm roles={roles} apoderados={apoderados} onClose={() => setIsOpen(false)} />
       </Modal>
     </>
   );

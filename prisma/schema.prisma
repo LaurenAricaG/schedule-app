@@ -19,20 +19,26 @@ model Role {
 
 // Usuarios
 model User {
-  id        Int     @id @default(autoincrement())
-  name      String
-  lastname  String?
-  email     String  @unique
-  username  String  @unique
-  password  String
-  rolId     Int
-  rol       Role    @relation(fields: [rolId], references: [id])
-  courses   Course[]
-  createdAt DateTime @default(now())
-  deletedAt DateTime?
-  status    Boolean @default(true)
+  id           Int       @id @default(autoincrement())
+  name         String
+  lastname     String?
+  email        String    @unique
+  username     String    @unique
+  password     String
+  rolId        Int
+  rol          Role      @relation(fields: [rolId], references: [id])
+  courses      Course[]
+  createdAt    DateTime  @default(now())
+  deletedAt    DateTime?
+  status       Boolean   @default(true)
+
+  // 🔗 Relación Autorreferencial (Apoderado <-> Estudiantes)
+  apoderadoId  Int?
+  apoderado    User?     @relation("ApoderadoEstudiantes", fields: [apoderadoId], references: [id], onDelete: SetNull)
+  students     User[]    @relation("ApoderadoEstudiantes")
 
   @@index([rolId])
+  @@index([apoderadoId])
 }
 
 // Cursos

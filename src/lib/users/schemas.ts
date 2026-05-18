@@ -7,4 +7,8 @@ export const UserSchema = z.object({
   username: z.string().trim().min(1, "El usuario es requerido").min(3, "Mínimo 3 caracteres"),
   password: z.string().optional().or(z.literal("")),
   rolId: z.coerce.number().min(1, "El rol es requerido"),
+  apoderadoId: z.preprocess(
+    (val) => (val === "" || val === null || val === undefined ? null : Number(val)),
+    z.number().nullable().optional()
+  ),
 });

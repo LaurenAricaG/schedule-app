@@ -6,8 +6,17 @@ import { ScheduleSkeleton } from "@/components/ui/Skeletons";
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
+import { prisma } from "@/lib/prisma";
 
-async function ScheduleLoader({ userId }: { userId: number }) {
+async function ScheduleLoader({
+  userId,
+  scheduleHref,
+  coursesHref,
+}: {
+  userId: number;
+  scheduleHref?: string;
+  coursesHref?: string;
+}) {
   const [coursesResult, scheduleResult] = await Promise.all([
     getCoursesByUser(userId, 1, 100),
     getScheduleByUser(userId)
@@ -27,29 +36,67 @@ async function ScheduleLoader({ userId }: { userId: number }) {
       isAdmin={false}
       isRouted={true}
       initialView="schedule"
+      scheduleHref={scheduleHref}
+      coursesHref={coursesHref}
     />
   );
 }
 
-export default async function PanelSchedulePage() {
+type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
+
+export default async function PanelSchedulePage(props: {
+  searchParams: SearchParams;
+}) {
   const session = await auth();
   if (!session) redirect("/login");
 
-  if (session.user.rol === "docente" || session.user.rol === "apoderado") {
+  const resolvedSearchParams = await props.searchParams;
+  const studentIdParam = resolvedSearchParams?.studentId;
+  let userId = parseInt(session.user.id);
+  let studentName = "";
+
+  if (session.user.rol === "apoderado") {
+    if (!studentIdParam) {
+      redirect("/panel");
+    }
+    const studentId = parseInt(studentIdParam as string);
+    // Validar que el estudiante esté vinculado a este apoderado
+    const student = await prisma.user.findFirst({
+      where: {
+        id: studentId,
+        apoderadoId: userId,
+        deletedAt: null,
+        status: true,
+      },
+    });
+    if (!student) {
+      redirect("/panel");
+    }
+    userId = studentId;
+    studentName = ` de ${student.name}`;
+  } else if (session.user.rol === "docente") {
     redirect("/panel");
   }
 
-  const userId = parseInt(session.user.id);
+  const scheduleHref = session.user.rol === "apoderado" ? `/panel/horario?studentId=${userId}` : "/panel/horario";
+  const coursesHref = session.user.rol === "apoderado" ? `/panel/cursos?studentId=${userId}` : "/panel/cursos";
 
   return (
     <section className="space-y-6">
       <Breadcrumbs
-        items={[{ label: "Panel", href: "/panel" }, { label: "Mi Horario" }]}
+        items={[
+          { label: "Panel", href: "/panel" },
+          { label: `Horario${studentName}` },
+        ]}
       />
 
       <ErrorBoundary variant="compact" title="No se pudo cargar el horario">
         <Suspense fallback={<ScheduleSkeleton />}>
-          <ScheduleLoader userId={userId} />
+          <ScheduleLoader
+            userId={userId}
+            scheduleHref={scheduleHref}
+            coursesHref={coursesHref}
+          />
         </Suspense>
       </ErrorBoundary>
     </section>
