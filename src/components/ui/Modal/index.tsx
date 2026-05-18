@@ -26,13 +26,17 @@ export default function Modal({
 
   useEffect(() => {
     setMounted(true);
+    const mainEl = document.querySelector("main");
     if (isOpen) {
       document.body.style.overflow = "hidden";
+      if (mainEl) mainEl.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "unset";
+      if (mainEl) mainEl.style.overflow = "auto";
     }
     return () => {
       document.body.style.overflow = "unset";
+      if (mainEl) mainEl.style.overflow = "auto";
     };
   }, [isOpen]);
 
@@ -63,7 +67,7 @@ export default function Modal({
           </button>
         </div>
         
-        <div className="px-4 py-4 sm:px-7 sm:py-7 overflow-y-auto max-h-[80vh]">
+        <div className="px-4 py-4 sm:px-7 sm:py-7 overflow-y-auto max-h-[80vh] scrollbar-thin scrollbar-thumb-black/10 dark:scrollbar-thumb-white/10 hover:scrollbar-thumb-black/20 dark:hover:scrollbar-thumb-white/20">
           {children}
         </div>
       </div>

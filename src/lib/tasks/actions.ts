@@ -83,6 +83,11 @@ export async function updateTask(
 
 export async function deleteTask(id: number) {
   try {
+    // Eliminar recordatorios en cascada manualmente
+    await prisma.reminder.deleteMany({
+      where: { taskId: id },
+    });
+
     const task = await prisma.task.delete({
       where: { id },
     });
@@ -112,5 +117,66 @@ export async function toggleTaskStatus(id: number, currentStatus: TaskStatus) {
   } catch (error) {
     console.error("Error toggling task status:", error);
     return { success: false, error: "No se pudo cambiar el estado de la tarea" };
+  }
+}
+
+export async function addReminder(
+  taskId: number,
+  data: { type: ReminderType; remindAt: Date }
+) {
+  try {
+    const task = await prisma.task.findUnique({ where: { id: taskId } });
+    if (!task) return { success: false, error: "Tarea no encontrada" };
+
+    const reminder = await prisma.reminder.create({
+      data: {
+        taskId,
+        type: data.type,
+        remindAt: data.remindAt,
+      },
+    });
+
+    revalidatePath(`/panel/cursos/${task.courseId}`);
+    return { success: true, data: reminder };
+  } catch (error) {
+    console.error("Error adding reminder:", error);
+    return { success: false, error: "No se pudo agregar el recordatorio" };
+  }
+}
+
+export async function updateReminder(
+  reminderId: number,
+  data: { type: ReminderType; remindAt: Date }
+) {
+  try {
+    const reminder = await prisma.reminder.update({
+      where: { id: reminderId },
+      data: {
+        type: data.type,
+        remindAt: data.remindAt,
+      },
+      include: { task: true },
+    });
+
+    revalidatePath(`/panel/cursos/${reminder.task.courseId}`);
+    return { success: true, data: reminder };
+  } catch (error) {
+    console.error("Error updating reminder:", error);
+    return { success: false, error: "No se pudo actualizar el recordatorio" };
+  }
+}
+
+export async function deleteReminderAction(reminderId: number) {
+  try {
+    const reminder = await prisma.reminder.delete({
+      where: { id: reminderId },
+      include: { task: true },
+    });
+
+    revalidatePath(`/panel/cursos/${reminder.task.courseId}`);
+    return { success: true };
+  } catch (error) {
+    console.error("Error deleting reminder:", error);
+    return { success: false, error: "No se pudo eliminar el recordatorio" };
   }
 }
