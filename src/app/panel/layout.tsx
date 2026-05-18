@@ -36,7 +36,7 @@ export default async function PanelLayout({
               </h1>
             </LazyLink>
 
-            <PanelNavbar />
+            <PanelNavbar role={session.user.rol} />
           </div>
 
           <div className="flex items-center gap-2">
@@ -55,7 +55,7 @@ export default async function PanelLayout({
         {children}
       </main>
 
-      <PanelMobileNav />
+      <PanelMobileNav role={session.user.rol} />
     </div>
   );
 }

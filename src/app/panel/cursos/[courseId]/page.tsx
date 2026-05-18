@@ -19,6 +19,10 @@ export default async function CourseDetailPage({
   const session = await auth();
   if (!session) redirect("/login");
 
+  if (session.user.rol === "docente" || session.user.rol === "apoderado") {
+    redirect("/panel");
+  }
+
   const { courseId } = await params;
   const { page: pageStr, tab = "active" } = await searchParams;
 

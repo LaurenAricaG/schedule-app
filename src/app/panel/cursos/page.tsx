@@ -39,6 +39,10 @@ export default async function PanelCoursesPage(props: {
   const session = await auth();
   if (!session) redirect("/login");
 
+  if (session.user.rol === "docente" || session.user.rol === "apoderado") {
+    redirect("/panel");
+  }
+
   const userId = parseInt(session.user.id);
   const resolvedSearchParams = await props.searchParams;
   const currentPage = Number(resolvedSearchParams?.page) || 1;
