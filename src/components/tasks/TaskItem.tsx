@@ -361,7 +361,7 @@ export function TaskItem({ task, onEdit, isAdminView = false }: TaskItemProps) {
               <h4 className="flex items-center gap-2 text-[10px] font-black text-foreground-muted/60 uppercase tracking-widest mb-2">
                 <FiClipboard size={12} /> Título
               </h4>
-              <p className="text-foreground font-bold text-xl leading-tight break-words overflow-hidden">
+              <p className="text-foreground font-bold text-xl leading-tight wrap-break-word overflow-hidden">
                 {task.title}
               </p>
             </div>
@@ -370,7 +370,7 @@ export function TaskItem({ task, onEdit, isAdminView = false }: TaskItemProps) {
               <h4 className="flex items-center gap-2 text-[10px] font-black text-foreground-muted/60 uppercase tracking-widest mb-2">
                 <FiEdit2 size={12} /> Descripción
               </h4>
-              <p className="text-foreground/80 whitespace-pre-wrap leading-relaxed text-sm break-words overflow-hidden">
+              <p className="text-foreground/80 whitespace-pre-wrap leading-relaxed text-sm wrap-break-word overflow-hidden">
                 {task.description || <span className="italic opacity-60 text-foreground-muted">No hay descripción proporcionada.</span>}
               </p>
             </div>

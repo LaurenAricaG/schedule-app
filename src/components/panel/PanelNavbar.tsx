@@ -11,12 +11,16 @@ const navItems = [
   { label: "Horario", href: "/panel/horario", icon: FiCalendar },
 ];
 
-export default function PanelNavbar() {
+export default function PanelNavbar({ role }: { role?: string }) {
   const pathname = usePathname();
+
+  const filteredNavItems = role === "docente" || role === "apoderado"
+    ? navItems.filter((item) => item.href === "/panel")
+    : navItems;
 
   return (
     <nav className="hidden md:flex items-center gap-1">
-      {navItems.map((item) => {
+      {filteredNavItems.map((item) => {
         const Icon = item.icon;
         const isHome = item.href === "/panel";
         const isActive = isHome 

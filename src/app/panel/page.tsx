@@ -26,6 +26,105 @@ function isUrgent(dueDate: Date | string): boolean {
 // ─────────────────────────────────────────────────────────────────────────────
 const PanelPage = async () => {
   const session = await auth();
+  const role = session?.user?.rol;
+  const isSpecialRole = role === "docente" || role === "apoderado";
+
+  if (isSpecialRole) {
+    const roleColors: Record<string, { bg: string, text: string, border: string, badge: string, iconBg: string }> = {
+      docente: {
+        bg: "from-orange-500/10 to-amber-500/5 dark:from-orange-500/20 dark:to-amber-500/10",
+        text: "text-orange-600 dark:text-orange-400",
+        border: "border-orange-500/20 dark:border-orange-500/30",
+        badge: "bg-orange-500/10 text-orange-600 dark:bg-orange-500/20 dark:text-orange-400 border-orange-500/20",
+        iconBg: "bg-orange-500 text-white shadow-lg shadow-orange-500/20",
+      },
+      apoderado: {
+        bg: "from-pink-500/10 to-purple-500/5 dark:from-pink-500/20 dark:to-purple-500/10",
+        text: "text-pink-600 dark:text-pink-400",
+        border: "border-pink-500/20 dark:border-pink-500/30",
+        badge: "bg-pink-500/10 text-pink-600 dark:bg-pink-500/20 dark:text-pink-400 border-pink-500/20",
+        iconBg: "bg-pink-500 text-white shadow-lg shadow-pink-500/20",
+      }
+    };
+
+    const currentColors = roleColors[role] || {
+      bg: "from-primary/10 to-primary/5 dark:from-primary/20 dark:to-primary/10",
+      text: "text-primary",
+      border: "border-primary/20",
+      badge: "bg-primary/10 text-primary border-primary/20",
+      iconBg: "bg-primary text-white shadow-lg shadow-primary/20",
+    };
+
+    const roleNameFriendly = role === "docente" ? "Docente" : role === "apoderado" ? "Apoderado" : role;
+
+    return (
+      <div className="space-y-8 animate-in fade-in duration-700 pb-12">
+        {/* Header: Resumen Ejecutivo */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-black/5 dark:border-white/5 pb-8">
+          <div className="space-y-2">
+            <div className="flex items-center gap-2 text-primary font-bold text-xs uppercase tracking-widest">
+              <FiActivity /> Panel de Control
+            </div>
+            <h1 className="text-4xl font-black tracking-tight text-foreground">
+              ¡Qué bueno verte, {session?.user?.name?.split(" ")[0]}!
+            </h1>
+            <p className="text-foreground-muted text-lg">
+              Has iniciado sesión con el rol de <span className={`font-bold border px-2.5 py-0.5 rounded-lg text-sm uppercase tracking-wide ${currentColors.badge}`}>{roleNameFriendly}</span>.
+            </p>
+          </div>
+        </div>
+
+        {/* Premium Profile Card */}
+        <div className="max-w-3xl mx-auto w-full">
+          <div className={`relative overflow-hidden rounded-4xl bg-linear-to-br ${currentColors.bg} border ${currentColors.border} p-8 md:p-12 shadow-sm transition-all duration-300`}>
+            
+            {/* Background design elements */}
+            <div className="absolute -right-16 -top-16 w-64 h-64 bg-white/10 rounded-full blur-3xl" />
+            <div className="absolute -left-16 -bottom-16 w-64 h-64 bg-primary/10 rounded-full blur-3xl" />
+
+            <div className="relative z-10 flex flex-col sm:flex-row items-center gap-8">
+              {/* Profile Avatar / Role Icon */}
+              <div className={`w-24 h-24 rounded-3xl flex items-center justify-center text-4xl font-bold shrink-0 ${currentColors.iconBg}`}>
+                {session?.user?.name ? session.user.name.charAt(0).toUpperCase() : "U"}
+              </div>
+
+              {/* User Details */}
+              <div className="flex-1 space-y-4 text-center sm:text-left">
+                <div>
+                  <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-[10px] font-black uppercase tracking-wider ${currentColors.badge}`}>
+                    {roleNameFriendly}
+                  </span>
+                  <h2 className="text-3xl font-black text-foreground mt-2 leading-tight">
+                    {session?.user?.name} {session?.user?.lastname}
+                  </h2>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-black/5 dark:border-white/5 text-sm">
+                  <div className="space-y-1">
+                    <p className="text-[10px] font-black uppercase tracking-wider text-foreground-muted/60">Email</p>
+                    <p className="font-semibold text-foreground break-all">{session?.user?.email}</p>
+                  </div>
+                  <div className="space-y-1">
+                    <p className="text-[10px] font-black uppercase tracking-wider text-foreground-muted/60">Nombre de Usuario</p>
+                    <p className="font-semibold text-foreground">@{session?.user?.username}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Clean Message for Empty Panel */}
+          <div className="mt-8 text-center p-8 bg-surface-card border border-black/5 dark:border-white/5 rounded-3xl">
+            <h3 className="text-lg font-bold text-foreground">Bienvenido a Schedule App</h3>
+            <p className="text-foreground-muted mt-2 text-sm max-w-md mx-auto leading-relaxed">
+              Como {roleNameFriendly.toLowerCase()}, tu cuenta está activa y configurada correctamente. Actualmente, tu vista no incluye cursos ni asignaciones académicas directas.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   const result = await getUserDashboardData();
 
   if (!result.success || !result.data) {

@@ -35,6 +35,10 @@ export default async function PanelSchedulePage() {
   const session = await auth();
   if (!session) redirect("/login");
 
+  if (session.user.rol === "docente" || session.user.rol === "apoderado") {
+    redirect("/panel");
+  }
+
   const userId = parseInt(session.user.id);
 
   return (
