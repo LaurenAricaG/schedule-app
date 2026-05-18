@@ -12,7 +12,13 @@ import {
   FiEye,
 } from "react-icons/fi";
 import { Task, TaskStatus, ReminderType } from "@/generated/prisma/client";
-import { toggleTaskStatus, deleteTask, addReminder, updateReminder, deleteReminderAction } from "@/lib/tasks/actions";
+import {
+  toggleTaskStatus,
+  deleteTask,
+  addReminder,
+  updateReminder,
+  deleteReminderAction,
+} from "@/lib/tasks/actions";
 import { toast } from "sonner";
 import { cn } from "@/utils/cn.utils";
 
@@ -31,7 +37,9 @@ export function TaskItem({ task, onEdit, isAdminView = false }: TaskItemProps) {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [isReminderModalOpen, setIsReminderModalOpen] = useState(false);
-  const [editingReminderId, setEditingReminderId] = useState<number | null>(null);
+  const [editingReminderId, setEditingReminderId] = useState<number | null>(
+    null,
+  );
   const [reminderType, setReminderType] = useState<ReminderType | "">("");
   const [remindAt, setRemindAt] = useState("");
   const isCompleted = task.status === TaskStatus.COMPLETED;
@@ -50,22 +58,24 @@ export function TaskItem({ task, onEdit, isAdminView = false }: TaskItemProps) {
       toast.error("Selecciona un tipo de recordatorio.");
       return;
     }
-    
+
     const reminderDate = new Date(remindAt);
     const dueDate = new Date(task.dueDate);
     const maxDate = new Date(dueDate.getTime() - 24 * 60 * 60 * 1000);
     const now = new Date();
-    
+
     if (reminderDate < now && !editingReminderId) {
       toast.error("La fecha del recordatorio no puede estar en el pasado.");
       return;
     }
 
     if (reminderDate > maxDate) {
-      toast.info("Solo se puede registrar el recordatorio hasta el mediodía del día límite permitido.");
+      toast.info(
+        "Solo se puede registrar el recordatorio hasta el mediodía del día límite permitido.",
+      );
       return;
     }
-    
+
     startTransition(async () => {
       if (editingReminderId) {
         const result = await updateReminder(editingReminderId, {
@@ -290,11 +300,15 @@ export function TaskItem({ task, onEdit, isAdminView = false }: TaskItemProps) {
             <button
               onClick={() => {
                 if (isCompleted) {
-                  toast.error("No se puede añadir un recordatorio a una tarea completada.");
+                  toast.error(
+                    "No se puede añadir un recordatorio a una tarea completada.",
+                  );
                   return;
                 }
                 if (isOverdue) {
-                  toast.error("No se puede añadir un recordatorio a una tarea atrasada.");
+                  toast.error(
+                    "No se puede añadir un recordatorio a una tarea atrasada.",
+                  );
                   return;
                 }
                 setEditingReminderId(null);
@@ -307,7 +321,7 @@ export function TaskItem({ task, onEdit, isAdminView = false }: TaskItemProps) {
             >
               <FiBell size={20} />
               {task.reminders && task.reminders.length > 0 && (
-                <span className="absolute top-1.5 right-2 flex h-[14px] w-[14px] items-center justify-center rounded-full bg-primary text-[7px] font-bold text-white ring-2 ring-surface-card z-10 pointer-events-none group-hover:bg-primary group-hover:text-white">
+                <span className="absolute top-1.5 right-2 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-primary text-[7px] font-bold text-white ring-2 ring-surface-card z-10 pointer-events-none group-hover:bg-primary group-hover:text-white">
                   {task.reminders.length}
                 </span>
               )}
@@ -365,13 +379,17 @@ export function TaskItem({ task, onEdit, isAdminView = false }: TaskItemProps) {
                 {task.title}
               </p>
             </div>
-            
+
             <div className="pt-4 border-t border-black/5 dark:border-white/5">
               <h4 className="flex items-center gap-2 text-[10px] font-black text-foreground-muted/60 uppercase tracking-widest mb-2">
                 <FiEdit2 size={12} /> Descripción
               </h4>
               <p className="text-foreground/80 whitespace-pre-wrap leading-relaxed text-sm wrap-break-word overflow-hidden">
-                {task.description || <span className="italic opacity-60 text-foreground-muted">No hay descripción proporcionada.</span>}
+                {task.description || (
+                  <span className="italic opacity-60 text-foreground-muted">
+                    No hay descripción proporcionada.
+                  </span>
+                )}
               </p>
             </div>
           </div>
@@ -398,20 +416,30 @@ export function TaskItem({ task, onEdit, isAdminView = false }: TaskItemProps) {
             </div>
 
             <div className="p-3 sm:p-4 rounded-2xl bg-surface-card border border-black/5 dark:border-white/5 flex items-center gap-3 shadow-sm">
-              <div className={cn(
-                "h-10 w-10 shrink-0 rounded-xl flex items-center justify-center",
-                isCompleted ? "bg-success/10 text-success" : "bg-warning/10 text-warning"
-              )}>
-                {isCompleted ? <FiCheckCircle size={18} /> : <FiClock size={18} />}
+              <div
+                className={cn(
+                  "h-10 w-10 shrink-0 rounded-xl flex items-center justify-center",
+                  isCompleted
+                    ? "bg-success/10 text-success"
+                    : "bg-warning/10 text-warning",
+                )}
+              >
+                {isCompleted ? (
+                  <FiCheckCircle size={18} />
+                ) : (
+                  <FiClock size={18} />
+                )}
               </div>
               <div className="flex flex-col min-w-0">
                 <h4 className="text-[10px] font-black text-foreground-muted/60 uppercase tracking-widest mb-0.5">
                   Estado
                 </h4>
-                <span className={cn(
-                  "text-sm font-bold truncate",
-                  isCompleted ? "text-success" : "text-warning"
-                )}>
+                <span
+                  className={cn(
+                    "text-sm font-bold truncate",
+                    isCompleted ? "text-success" : "text-warning",
+                  )}
+                >
                   {isCompleted ? "Completada" : "Pendiente"}
                 </span>
               </div>
@@ -423,17 +451,22 @@ export function TaskItem({ task, onEdit, isAdminView = false }: TaskItemProps) {
             <h4 className="flex items-center gap-2 text-[10px] font-black text-foreground-muted/60 uppercase tracking-widest mb-4">
               <FiBell size={12} /> Recordatorios
             </h4>
-            
+
             {task.reminders && task.reminders.length > 0 ? (
               <ul className="space-y-3">
                 {task.reminders.map((r, i) => (
-                  <li key={i} className="flex items-center justify-between p-3 rounded-xl bg-surface-low border border-black/5 dark:border-white/5 transition-all hover:border-primary/20 hover:shadow-md hover:shadow-primary/5">
+                  <li
+                    key={i}
+                    className="flex items-center justify-between p-3 rounded-xl bg-surface-low border border-black/5 dark:border-white/5 transition-all hover:border-primary/20 hover:shadow-md hover:shadow-primary/5"
+                  >
                     <div className="flex items-center gap-3 text-foreground">
                       <div className="bg-primary/10 h-8 w-8 rounded-lg flex items-center justify-center text-primary shadow-sm">
                         <FiBell size={14} />
                       </div>
                       <div className="flex flex-col min-w-0">
-                        <span className="font-bold text-xs uppercase tracking-wide truncate">{r.type}</span>
+                        <span className="font-bold text-xs uppercase tracking-wide truncate">
+                          {r.type}
+                        </span>
                         <span className="text-foreground-muted text-[11px] font-medium truncate">
                           {new Date(r.remindAt).toLocaleString("es-ES", {
                             day: "2-digit",
@@ -452,7 +485,10 @@ export function TaskItem({ task, onEdit, isAdminView = false }: TaskItemProps) {
                             setEditingReminderId(r.id);
                             setReminderType(r.type as ReminderType);
                             const dateObj = new Date(r.remindAt);
-                            dateObj.setMinutes(dateObj.getMinutes() - dateObj.getTimezoneOffset());
+                            dateObj.setMinutes(
+                              dateObj.getMinutes() -
+                                dateObj.getTimezoneOffset(),
+                            );
                             setRemindAt(dateObj.toISOString().slice(0, 16));
                             setIsDetailsOpen(false);
                             setIsReminderModalOpen(true);
@@ -480,7 +516,9 @@ export function TaskItem({ task, onEdit, isAdminView = false }: TaskItemProps) {
                 <div className="h-10 w-10 rounded-full bg-surface-card flex items-center justify-center text-foreground-muted/40 mb-3 shadow-sm">
                   <FiBell size={16} />
                 </div>
-                <p className="text-xs text-foreground-muted font-medium">No hay recordatorios programados</p>
+                <p className="text-xs text-foreground-muted font-medium">
+                  No hay recordatorios programados
+                </p>
               </div>
             )}
           </div>
@@ -491,9 +529,15 @@ export function TaskItem({ task, onEdit, isAdminView = false }: TaskItemProps) {
       <Modal
         isOpen={isReminderModalOpen}
         onClose={() => setIsReminderModalOpen(false)}
-        title={editingReminderId ? "Editar Recordatorio" : "Añadir Recordatorio"}
+        title={
+          editingReminderId ? "Editar Recordatorio" : "Añadir Recordatorio"
+        }
       >
-        <form onSubmit={handleAddReminder} className="space-y-5 sm:space-y-6" noValidate>
+        <form
+          onSubmit={handleAddReminder}
+          className="space-y-5 sm:space-y-6"
+          noValidate
+        >
           <SelectField
             label="Tipo de Recordatorio"
             id="reminder-type"
@@ -516,8 +560,18 @@ export function TaskItem({ task, onEdit, isAdminView = false }: TaskItemProps) {
             value={remindAt}
             onChange={(e) => setRemindAt(e.target.value)}
             required
-            min={new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16)}
-            max={new Date(new Date(task.dueDate).getTime() - 24 * 60 * 60 * 1000 - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16)}
+            min={new Date(
+              new Date().getTime() - new Date().getTimezoneOffset() * 60000,
+            )
+              .toISOString()
+              .slice(0, 16)}
+            max={new Date(
+              new Date(task.dueDate).getTime() -
+                24 * 60 * 60 * 1000 -
+                new Date().getTimezoneOffset() * 60000,
+            )
+              .toISOString()
+              .slice(0, 16)}
           />
 
           <div className="flex items-center justify-end gap-3 pt-4 sm:pt-6">
@@ -534,7 +588,11 @@ export function TaskItem({ task, onEdit, isAdminView = false }: TaskItemProps) {
               disabled={isPending}
               className="rounded-lg bg-primary px-6 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-60"
             >
-              {isPending ? "Procesando..." : editingReminderId ? "Actualizar Recordatorio" : "Crear Recordatorio"}
+              {isPending
+                ? "Procesando..."
+                : editingReminderId
+                  ? "Actualizar Recordatorio"
+                  : "Crear Recordatorio"}
             </button>
           </div>
         </form>

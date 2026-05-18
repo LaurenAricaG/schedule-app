@@ -8,23 +8,21 @@ import { TaskList } from "@/components/tasks/TaskList";
 import { TaskHeader } from "@/components/tasks/TaskHeader";
 import { TasksSkeleton } from "@/components/ui/Skeletons";
 import { FiActivity } from "react-icons/fi";
+import { prisma } from "@/lib/prisma";
 
 export default async function CourseDetailPage({
   params,
   searchParams,
 }: {
   params: Promise<{ courseId: string }>;
-  searchParams: Promise<{ page?: string; tab?: string }>;
+  searchParams: Promise<{ page?: string; tab?: string; studentId?: string }>;
 }) {
   const session = await auth();
   if (!session) redirect("/login");
 
-  if (session.user.rol === "docente" || session.user.rol === "apoderado") {
-    redirect("/panel");
-  }
-
   const { courseId } = await params;
-  const { page: pageStr, tab = "active" } = await searchParams;
+  const resolvedSearchParams = await searchParams;
+  const { page: pageStr, tab = "active", studentId: studentIdParam } = resolvedSearchParams;
 
   const id = parseInt(courseId);
   const page = parseInt(pageStr || "1");
@@ -36,14 +34,50 @@ export default async function CourseDetailPage({
   }
 
   const course = courseResult.data;
-  const isOwner = String(session.user.id) === String(course.user.id);
+  let studentName = "";
+  let isParentView = false;
+
+  if (session.user.rol === "apoderado") {
+    if (!studentIdParam) {
+      redirect("/panel");
+    }
+    const studentId = parseInt(studentIdParam as string);
+    // 1. Validar que el estudiante esté vinculado a este apoderado
+    const student = await prisma.user.findFirst({
+      where: {
+        id: studentId,
+        apoderadoId: parseInt(session.user.id),
+        deletedAt: null,
+        status: true,
+      },
+    });
+    if (!student) {
+      redirect("/panel");
+    }
+    // 2. Validar que el curso pertenezca a este estudiante
+    if (course.user.id !== studentId) {
+      redirect(`/panel/cursos?studentId=${studentId}`);
+    }
+    studentName = ` de ${student.name}`;
+    isParentView = true;
+  } else if (session.user.rol === "docente") {
+    redirect("/panel");
+  } else {
+    // Si es estudiante regular, validar que sea el dueño del curso
+    if (course.user.id !== parseInt(session.user.id)) {
+      redirect("/panel/cursos");
+    }
+  }
+
+  const isOwner = !isParentView && String(session.user.id) === String(course.user.id);
+  const coursesListHref = isParentView ? `/panel/cursos?studentId=${studentIdParam}` : "/panel/cursos";
 
   return (
     <section className="space-y-6 animate-in fade-in duration-500">
       <Breadcrumbs
         items={[
           { label: "Panel", href: "/panel" },
-          { label: "Mis Cursos", href: "/panel/cursos" },
+          { label: `Cursos${studentName}`, href: coursesListHref },
           { label: course.name },
         ]}
       />
@@ -89,10 +123,10 @@ export default async function CourseDetailPage({
 
       {/* Task Section */}
       <div className="space-y-4">
-        <TaskHeader courseId={id} />
+        <TaskHeader courseId={id} hideAddButton={isParentView} />
         
         <Suspense key={`${id}-${page}-${tab}`} fallback={<TasksSkeleton minimal isAdmin={false} />}>
-          <TaskContainer courseId={id} page={page} tab={tab} />
+          <TaskContainer courseId={id} page={page} tab={tab} isAdminView={isParentView} />
         </Suspense>
       </div>
     </section>
@@ -103,10 +137,12 @@ async function TaskContainer({
   courseId,
   page,
   tab,
+  isAdminView = false,
 }: {
   courseId: number;
   page: number;
   tab: string;
+  isAdminView?: boolean;
 }) {
   const tasksResult = await getTasksByCourseId(courseId, page, 6, tab);
 
@@ -122,6 +158,7 @@ async function TaskContainer({
       currentPage={page}
       totalTasks={tasksData.totalTasks || 0}
       hideHeader={true}
+      isAdminView={isAdminView}
     />
   );
 }

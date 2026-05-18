@@ -21,6 +21,7 @@ export async function getUsers(
           username: true,
           status: true,
           rolId: true,
+          apoderadoId: true,
           rol: {
             select: {
               id: true,

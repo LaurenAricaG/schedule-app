@@ -29,6 +29,7 @@ export type User = {
   status: boolean;
   createdAt: Date;
   deletedAt: Date | null;
+  apoderadoId?: number | null;
 };
 
 export type Course = {

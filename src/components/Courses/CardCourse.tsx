@@ -17,9 +17,15 @@ type CardCourseProps = {
   course: Course;
   onSuccess: () => void;
   isAdmin?: boolean;
+  studentId?: number;
 };
 
-export default function CardCourse({ course, onSuccess, isAdmin = false }: CardCourseProps) {
+export default function CardCourse({
+  course,
+  onSuccess,
+  isAdmin = false,
+  studentId,
+}: CardCourseProps) {
   const [isPending, startTransition] = useTransition();
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
@@ -143,7 +149,9 @@ export default function CardCourse({ course, onSuccess, isAdmin = false }: CardC
             href={
               isAdmin
                 ? `/admin/cursos/${course.userId}/${course.id}`
-                : `/panel/cursos/${course.id}`
+                : studentId
+                  ? `/panel/cursos/${course.id}?studentId=${studentId}`
+                  : `/panel/cursos/${course.id}`
             }
             className={cn(
               "inline-flex items-center gap-2 rounded-lg px-4 py-2 text-xs font-semibold transition-colors cursor-pointer",

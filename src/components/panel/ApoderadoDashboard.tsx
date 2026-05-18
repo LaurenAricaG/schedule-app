@@ -9,8 +9,6 @@ import {
   FiArrowRight,
   FiBook,
   FiUser,
-  FiMail,
-  FiShield,
   FiCalendar,
 } from "react-icons/fi";
 import LazyLink from "@/components/ui/LazyLink";
@@ -47,7 +45,7 @@ export function ApoderadoDashboard({
   session,
 }: ApoderadoDashboardProps) {
   const [selectedStudentId, setSelectedStudentId] = useState<number | null>(
-    initialStudents.length > 0 ? initialStudents[0].id : null
+    initialStudents.length > 0 ? initialStudents[0].id : null,
   );
   const [studentData, setStudentData] = useState<any>(null);
   const [loading, setLoading] = useState(false);
@@ -63,7 +61,9 @@ export function ApoderadoDashboard({
         if (result.success && result.data) {
           setStudentData(result.data);
         } else {
-          toast.error(result.error || "No se pudieron cargar los datos del estudiante.");
+          toast.error(
+            result.error || "No se pudieron cargar los datos del estudiante.",
+          );
         }
       } catch (error) {
         toast.error("Ocurrió un error al conectar con el servidor.");
@@ -73,21 +73,25 @@ export function ApoderadoDashboard({
     });
   }, [selectedStudentId]);
 
-  const currentStudent = initialStudents.find((s) => s.id === selectedStudentId);
+  const currentStudent = initialStudents.find(
+    (s) => s.id === selectedStudentId,
+  );
 
   // Parent styling theme colors
   const themeColors = {
     bg: "from-pink-500/10 to-purple-500/5 dark:from-pink-500/20 dark:to-purple-500/10",
     text: "text-pink-600 dark:text-pink-400",
     border: "border-pink-500/20 dark:border-pink-500/30",
-    badge: "bg-pink-500/10 text-pink-600 dark:bg-pink-500/20 dark:text-pink-400 border-pink-500/20",
+    badge:
+      "bg-pink-500/10 text-pink-600 dark:bg-pink-500/20 dark:text-pink-400 border-pink-500/20",
     iconBg: "bg-pink-500 text-white shadow-lg shadow-pink-500/20",
   };
 
   const getInitials = (name: string, lastname: string | null) => {
     const firstName = name.trim().split(" ");
     if (lastname) return `${firstName[0][0]}${lastname[0]}`.toUpperCase();
-    if (firstName.length >= 2) return `${firstName[0][0]}${firstName[1][0]}`.toUpperCase();
+    if (firstName.length >= 2)
+      return `${firstName[0][0]}${firstName[1][0]}`.toUpperCase();
     return firstName[0][0].toUpperCase();
   };
 
@@ -105,7 +109,12 @@ export function ApoderadoDashboard({
             </h1>
             <p className="text-foreground-muted text-lg">
               Has iniciado sesión con el rol de{" "}
-              <span className={cn("font-bold border px-2.5 py-0.5 rounded-lg text-sm uppercase tracking-wide", themeColors.badge)}>
+              <span
+                className={cn(
+                  "font-bold border px-2.5 py-0.5 rounded-lg text-sm uppercase tracking-wide",
+                  themeColors.badge,
+                )}
+              >
                 Apoderado
               </span>
               .
@@ -114,15 +123,33 @@ export function ApoderadoDashboard({
         </div>
 
         <div className="max-w-3xl mx-auto w-full">
-          <div className={cn("relative overflow-hidden rounded-4xl bg-linear-to-br border p-8 md:p-12 shadow-sm", themeColors.bg, themeColors.border)}>
+          <div
+            className={cn(
+              "relative overflow-hidden rounded-4xl bg-linear-to-br border p-8 md:p-12 shadow-sm",
+              themeColors.bg,
+              themeColors.border,
+            )}
+          >
             <div className="relative z-10 flex flex-col sm:flex-row items-center gap-8">
-              <div className={cn("w-24 h-24 rounded-3xl flex items-center justify-center text-4xl font-bold shrink-0", themeColors.iconBg)}>
-                {session?.user?.name ? session.user.name.charAt(0).toUpperCase() : "U"}
+              <div
+                className={cn(
+                  "w-24 h-24 rounded-3xl flex items-center justify-center text-4xl font-bold shrink-0",
+                  themeColors.iconBg,
+                )}
+              >
+                {session?.user?.name
+                  ? session.user.name.charAt(0).toUpperCase()
+                  : "U"}
               </div>
 
               <div className="flex-1 space-y-4 text-center sm:text-left">
                 <div>
-                  <span className={cn("inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-[10px] font-black uppercase tracking-wider", themeColors.badge)}>
+                  <span
+                    className={cn(
+                      "inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-[10px] font-black uppercase tracking-wider",
+                      themeColors.badge,
+                    )}
+                  >
                     Apoderado
                   </span>
                   <h2 className="text-3xl font-black text-foreground mt-2 leading-tight">
@@ -132,12 +159,20 @@ export function ApoderadoDashboard({
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-black/5 dark:border-white/5 text-sm">
                   <div className="space-y-1">
-                    <p className="text-[10px] font-black uppercase tracking-wider text-foreground-muted/60">Email</p>
-                    <p className="font-semibold text-foreground break-all">{session?.user?.email}</p>
+                    <p className="text-[10px] font-black uppercase tracking-wider text-foreground-muted/60">
+                      Email
+                    </p>
+                    <p className="font-semibold text-foreground break-all">
+                      {session?.user?.email}
+                    </p>
                   </div>
                   <div className="space-y-1">
-                    <p className="text-[10px] font-black uppercase tracking-wider text-foreground-muted/60">Nombre de Usuario</p>
-                    <p className="font-semibold text-foreground">@{session?.user?.username}</p>
+                    <p className="text-[10px] font-black uppercase tracking-wider text-foreground-muted/60">
+                      Nombre de Usuario
+                    </p>
+                    <p className="font-semibold text-foreground">
+                      @{session?.user?.username}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -145,9 +180,14 @@ export function ApoderadoDashboard({
           </div>
 
           <div className="mt-8 text-center p-8 bg-surface-card border border-black/5 dark:border-white/5 rounded-3xl">
-            <h3 className="text-lg font-bold text-foreground">Aún no tienes estudiantes vinculados</h3>
+            <h3 className="text-lg font-bold text-foreground">
+              Aún no tienes estudiantes vinculados
+            </h3>
             <p className="text-foreground-muted mt-2 text-sm max-w-md mx-auto leading-relaxed">
-              Tu cuenta está activa, pero actualmente no tienes ningún estudiante asociado. Por favor, ponte en contacto con el Administrador del colegio para que vincule tu cuenta con la de tu estudiante.
+              Tu cuenta está activa, pero actualmente no tienes ningún
+              estudiante asociado. Por favor, ponte en contacto con el
+              Administrador del colegio para que vincule tu cuenta con la de tu
+              estudiante.
             </p>
           </div>
         </div>
@@ -172,7 +212,8 @@ export function ApoderadoDashboard({
             ¡Hola, {session?.user?.name?.split(" ")[0]}!
           </h1>
           <p className="text-foreground-muted text-lg">
-            Aquí puedes supervisar el rendimiento y progreso académico de tus estudiantes.
+            Aquí puedes supervisar el rendimiento y progreso académico de tus
+            estudiantes.
           </p>
         </div>
       </div>
@@ -193,13 +234,15 @@ export function ApoderadoDashboard({
                   "flex items-center gap-3 px-5 py-3 rounded-2xl border transition-all cursor-pointer text-left",
                   isActive
                     ? "bg-primary border-primary text-white shadow-lg shadow-primary/20 scale-[1.02]"
-                    : "bg-surface-card border-black/5 dark:border-white/5 hover:border-black/10 dark:hover:border-white/10 hover:bg-surface-low text-foreground"
+                    : "bg-surface-card border-black/5 dark:border-white/5 hover:border-black/10 dark:hover:border-white/10 hover:bg-surface-low text-foreground",
                 )}
               >
                 <div
                   className={cn(
                     "w-8 h-8 rounded-full flex items-center justify-center text-xs font-black shrink-0",
-                    isActive ? "bg-white/20 text-white" : "bg-avatar/10 text-avatar"
+                    isActive
+                      ? "bg-white/20 text-white"
+                      : "bg-avatar/10 text-avatar",
                   )}
                 >
                   {getInitials(student.name, student.lastname)}
@@ -208,7 +251,12 @@ export function ApoderadoDashboard({
                   <p className="text-xs font-black leading-tight">
                     {student.name} {student.lastname?.split(" ")[0] || ""}
                   </p>
-                  <p className={cn("text-[10px] opacity-75 mt-0.5", isActive ? "text-white/80" : "text-foreground-muted")}>
+                  <p
+                    className={cn(
+                      "text-[10px] opacity-75 mt-0.5",
+                      isActive ? "text-white/80" : "text-foreground-muted",
+                    )}
+                  >
                     @{student.username}
                   </p>
                 </div>
@@ -224,7 +272,10 @@ export function ApoderadoDashboard({
         <div className="space-y-8 animate-pulse">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {[...Array(4)].map((_, i) => (
-              <div key={i} className="h-32 bg-surface-card border border-black/5 dark:border-white/5 rounded-4xl" />
+              <div
+                key={i}
+                className="h-32 bg-surface-card border border-black/5 dark:border-white/5 rounded-4xl"
+              />
             ))}
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
@@ -243,7 +294,8 @@ export function ApoderadoDashboard({
               </div>
               <div>
                 <h3 className="text-lg font-black text-foreground">
-                  Monitoreando a {currentStudent?.name} {currentStudent?.lastname}
+                  Monitoreando a {currentStudent?.name}{" "}
+                  {currentStudent?.lastname}
                 </h3>
                 <p className="text-xs text-foreground-muted">
                   Matrícula: {currentStudent?.email}
@@ -356,7 +408,10 @@ export function ApoderadoDashboard({
                 <div className="space-y-8">
                   {studentData.recentActivity.length === 0 ? (
                     <div className="ml-10 p-12 text-center bg-surface-card border border-dashed border-black/10 dark:border-white/10 rounded-2xl">
-                      <FiActivity size={32} className="mx-auto text-foreground-muted/20 mb-4" />
+                      <FiActivity
+                        size={32}
+                        className="mx-auto text-foreground-muted/20 mb-4"
+                      />
                       <p className="text-foreground-muted italic font-medium text-sm">
                         Aún no hay tareas registradas para este estudiante.
                       </p>
@@ -365,16 +420,23 @@ export function ApoderadoDashboard({
                     studentData.recentActivity.map((item: any) => {
                       const done = item.status === "COMPLETED";
                       return (
-                        <div key={item.id} className="relative flex gap-5 group">
+                        <div
+                          key={item.id}
+                          className="relative flex gap-5 group"
+                        >
                           <div
                             className={cn(
                               "z-10 w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-500 shadow-xs border-2 border-surface shrink-0",
                               done
                                 ? "bg-success/10 text-success"
-                                : "bg-primary/10 text-primary"
+                                : "bg-primary/10 text-primary",
                             )}
                           >
-                            {done ? <FiCheckCircle size={18} /> : <FiClock size={18} />}
+                            {done ? (
+                              <FiCheckCircle size={18} />
+                            ) : (
+                              <FiClock size={18} />
+                            )}
                           </div>
 
                           <div className="flex-1 pt-1">
@@ -383,16 +445,21 @@ export function ApoderadoDashboard({
                                 <span
                                   className={cn(
                                     "text-[10px] font-black tracking-widest px-2 py-0.5 rounded-md",
-                                    done ? "bg-success/10 text-success" : "bg-primary/10 text-primary"
+                                    done
+                                      ? "bg-success/10 text-success"
+                                      : "bg-primary/10 text-primary",
                                   )}
                                 >
                                   {done ? "ENTREGADO" : "PENDIENTE"}
                                 </span>
                                 <time className="text-[10px] font-bold text-foreground-muted/50 uppercase">
-                                  {new Date(item.date).toLocaleDateString("es-ES", {
-                                    day: "numeric",
-                                    month: "short",
-                                  })}
+                                  {new Date(item.date).toLocaleDateString(
+                                    "es-ES",
+                                    {
+                                      day: "numeric",
+                                      month: "short",
+                                    },
+                                  )}
                                 </time>
                               </div>
                             </div>
@@ -402,7 +469,10 @@ export function ApoderadoDashboard({
                                 {item.title}
                               </h3>
                               <div className="mt-2 flex items-center gap-2">
-                                <FiBook size={12} className="text-foreground-muted" />
+                                <FiBook
+                                  size={12}
+                                  className="text-foreground-muted"
+                                />
                                 <span className="text-xs font-semibold text-foreground-muted">
                                   {item.courseName}
                                 </span>
@@ -431,108 +501,124 @@ export function ApoderadoDashboard({
                     <div className="p-10 text-center text-sm text-foreground-muted italic">
                       No hay tareas pendientes.
                     </div>
-                  ) : (() => {
-                    const now = new Date();
-                    const overdue = studentData.pendingTasks.filter(
-                      (t: any) => new Date(t.dueDate) < now
-                    );
-                    const urgent = studentData.pendingTasks.filter((t: any) => {
-                      const due = new Date(t.dueDate);
-                      return due >= now && due.getTime() - now.getTime() < 86400000 * 2;
-                    });
-                    const upcoming = studentData.pendingTasks.filter((t: any) => {
-                      const due = new Date(t.dueDate);
-                      return due.getTime() - now.getTime() >= 86400000 * 2;
-                    });
+                  ) : (
+                    (() => {
+                      const now = new Date();
+                      const overdue = studentData.pendingTasks.filter(
+                        (t: any) => new Date(t.dueDate) < now,
+                      );
+                      const urgent = studentData.pendingTasks.filter(
+                        (t: any) => {
+                          const due = new Date(t.dueDate);
+                          return (
+                            due >= now &&
+                            due.getTime() - now.getTime() < 86400000 * 2
+                          );
+                        },
+                      );
+                      const upcoming = studentData.pendingTasks.filter(
+                        (t: any) => {
+                          const due = new Date(t.dueDate);
+                          return due.getTime() - now.getTime() >= 86400000 * 2;
+                        },
+                      );
 
-                    return (
-                      <>
-                        {/* Overdue */}
-                        {overdue.map((task: any) => (
-                          <div
-                            key={task.id}
-                            className="p-6 space-y-3 bg-error/5 group hover:bg-error/10 transition-colors"
-                          >
-                            <div className="flex items-center justify-between">
-                              <span className="text-[10px] font-black text-error uppercase tracking-widest flex items-center gap-1">
-                                <span className="w-1 h-1 rounded-full bg-error" /> Vencida
-                              </span>
-                              <span className="text-[10px] font-bold text-foreground-muted uppercase tracking-widest">
-                                {task.course.name}
-                              </span>
+                      return (
+                        <>
+                          {/* Overdue */}
+                          {overdue.map((task: any) => (
+                            <div
+                              key={task.id}
+                              className="p-6 space-y-3 bg-error/5 group hover:bg-error/10 transition-colors"
+                            >
+                              <div className="flex items-center justify-between">
+                                <span className="text-[10px] font-black text-error uppercase tracking-widest flex items-center gap-1">
+                                  <span className="w-1 h-1 rounded-full bg-error" />{" "}
+                                  Vencida
+                                </span>
+                                <span className="text-[10px] font-bold text-foreground-muted uppercase tracking-widest">
+                                  {task.course.name}
+                                </span>
+                              </div>
+                              <h4 className="text-base font-bold text-foreground leading-tight line-clamp-2">
+                                {task.title}
+                              </h4>
+                              <div className="flex items-center justify-between pt-1">
+                                <span className="text-xs font-bold text-error">
+                                  Expiró el{" "}
+                                  {new Date(task.dueDate).toLocaleDateString(
+                                    "es-ES",
+                                    {
+                                      day: "2-digit",
+                                      month: "short",
+                                    },
+                                  )}
+                                </span>
+                              </div>
                             </div>
-                            <h4 className="text-base font-bold text-foreground leading-tight line-clamp-2">
-                              {task.title}
-                            </h4>
-                            <div className="flex items-center justify-between pt-1">
-                              <span className="text-xs font-bold text-error">
-                                Expiró el{" "}
-                                {new Date(task.dueDate).toLocaleDateString("es-ES", {
-                                  day: "2-digit",
-                                  month: "short",
-                                })}
-                              </span>
-                            </div>
-                          </div>
-                        ))}
+                          ))}
 
-                        {/* Urgent */}
-                        {urgent.map((task: any) => (
-                          <div
-                            key={task.id}
-                            className="p-6 space-y-3 group hover:bg-surface-low/20 transition-colors"
-                          >
-                            <div className="flex items-center justify-between">
-                              <span className="text-[10px] font-black text-warning uppercase tracking-widest flex items-center gap-1">
-                                <span className="w-1.5 h-1.5 rounded-full bg-warning animate-pulse" />{" "}
-                                Urgente
-                              </span>
-                              <span className="text-[10px] font-bold text-foreground-muted uppercase tracking-widest">
-                                {task.course.name}
-                              </span>
+                          {/* Urgent */}
+                          {urgent.map((task: any) => (
+                            <div
+                              key={task.id}
+                              className="p-6 space-y-3 group hover:bg-surface-low/20 transition-colors"
+                            >
+                              <div className="flex items-center justify-between">
+                                <span className="text-[10px] font-black text-warning uppercase tracking-widest flex items-center gap-1">
+                                  <span className="w-1.5 h-1.5 rounded-full bg-warning animate-pulse" />{" "}
+                                  Urgente
+                                </span>
+                                <span className="text-[10px] font-bold text-foreground-muted uppercase tracking-widest">
+                                  {task.course.name}
+                                </span>
+                              </div>
+                              <h4 className="text-base font-bold text-foreground leading-tight line-clamp-2">
+                                {task.title}
+                              </h4>
+                              <div className="flex items-center justify-between pt-1">
+                                <span className="text-xs font-semibold text-foreground-muted">
+                                  Vence en menos de 48h
+                                </span>
+                              </div>
                             </div>
-                            <h4 className="text-base font-bold text-foreground leading-tight line-clamp-2">
-                              {task.title}
-                            </h4>
-                            <div className="flex items-center justify-between pt-1">
-                              <span className="text-xs font-semibold text-foreground-muted">
-                                Vence en menos de 48h
-                              </span>
-                            </div>
-                          </div>
-                        ))}
+                          ))}
 
-                        {/* Upcoming */}
-                        {upcoming.map((task: any) => (
-                          <div
-                            key={task.id}
-                            className="p-6 space-y-3 group hover:bg-surface-low/20 transition-colors"
-                          >
-                            <div className="flex items-center justify-between">
-                              <span className="text-[10px] font-black text-primary uppercase tracking-widest">
-                                Próxima
-                              </span>
-                              <span className="text-[10px] font-bold text-foreground-muted uppercase tracking-widest">
-                                {task.course.name}
-                              </span>
+                          {/* Upcoming */}
+                          {upcoming.map((task: any) => (
+                            <div
+                              key={task.id}
+                              className="p-6 space-y-3 group hover:bg-surface-low/20 transition-colors"
+                            >
+                              <div className="flex items-center justify-between">
+                                <span className="text-[10px] font-black text-primary uppercase tracking-widest">
+                                  Próxima
+                                </span>
+                                <span className="text-[10px] font-bold text-foreground-muted uppercase tracking-widest">
+                                  {task.course.name}
+                                </span>
+                              </div>
+                              <h4 className="text-base font-bold text-foreground leading-tight line-clamp-2">
+                                {task.title}
+                              </h4>
+                              <div className="flex items-center justify-between pt-1">
+                                <span className="text-xs font-medium text-foreground-muted">
+                                  Vence el{" "}
+                                  {new Date(task.dueDate).toLocaleDateString(
+                                    "es-ES",
+                                    {
+                                      day: "2-digit",
+                                      month: "short",
+                                    },
+                                  )}
+                                </span>
+                              </div>
                             </div>
-                            <h4 className="text-base font-bold text-foreground leading-tight line-clamp-2">
-                              {task.title}
-                            </h4>
-                            <div className="flex items-center justify-between pt-1">
-                              <span className="text-xs font-medium text-foreground-muted">
-                                Vence el{" "}
-                                {new Date(task.dueDate).toLocaleDateString("es-ES", {
-                                  day: "2-digit",
-                                  month: "short",
-                                })}
-                              </span>
-                            </div>
-                          </div>
-                        ))}
-                      </>
-                    );
-                  })()}
+                          ))}
+                        </>
+                      );
+                    })()
+                  )}
                 </div>
               </div>
 
@@ -578,14 +664,14 @@ export function ApoderadoDashboard({
                     {completionRate === 0
                       ? "¡Momento de empezar!"
                       : completionRate < 40
-                      ? "¡Buen comienzo!"
-                      : completionRate < 80
-                      ? "¡Vas por muy buen camino!"
-                      : completionRate < 100
-                      ? "¡Casi llega a la meta!"
-                      : "¡Objetivo cumplido!"}
+                        ? "¡Buen comienzo!"
+                        : completionRate < 80
+                          ? "¡Vas por muy buen camino!"
+                          : completionRate < 100
+                            ? "¡Casi llega a la meta!"
+                            : "¡Objetivo cumplido!"}
                   </p>
-                  <p className="text-xs text-foreground-muted leading-relaxed max-w-[180px] mx-auto">
+                  <p className="text-xs text-foreground-muted leading-relaxed max-w-45 mx-auto">
                     {completionRate === 0
                       ? "Tu estudiante aún no ha iniciado tareas."
                       : `Tu estudiante ha superado el ${completionRate}% de sus metas.`}
@@ -602,31 +688,34 @@ export function ApoderadoDashboard({
                   <FiCalendar size={20} />
                 </div>
 
-                {studentData.stats.nextClass ? (() => {
-                  const DAYS_SPANISH: Record<string, string> = {
-                    MONDAY: "Lunes",
-                    TUESDAY: "Martes",
-                    WEDNESDAY: "Miércoles",
-                    THURSDAY: "Jueves",
-                    FRIDAY: "Viernes",
-                    SATURDAY: "Sábado",
-                    SUNDAY: "Domingo",
-                  };
-                  return (
-                    <div className="space-y-4">
-                      <div className="space-y-1">
-                        <p className="text-2xl font-black leading-tight line-clamp-2">
-                          {studentData.stats.nextClass.course.name}
-                        </p>
-                        <p className="text-xs font-bold opacity-80 uppercase tracking-tighter">
-                          {DAYS_SPANISH[studentData.stats.nextClass.dayOfWeek] ||
-                            studentData.stats.nextClass.dayOfWeek}{" "}
-                          • {studentData.stats.nextClass.startTime}
-                        </p>
+                {studentData.stats.nextClass ? (
+                  (() => {
+                    const DAYS_SPANISH: Record<string, string> = {
+                      MONDAY: "Lunes",
+                      TUESDAY: "Martes",
+                      WEDNESDAY: "Miércoles",
+                      THURSDAY: "Jueves",
+                      FRIDAY: "Viernes",
+                      SATURDAY: "Sábado",
+                      SUNDAY: "Domingo",
+                    };
+                    return (
+                      <div className="space-y-4">
+                        <div className="space-y-1">
+                          <p className="text-2xl font-black leading-tight line-clamp-2">
+                            {studentData.stats.nextClass.course.name}
+                          </p>
+                          <p className="text-xs font-bold opacity-80 uppercase tracking-tighter">
+                            {DAYS_SPANISH[
+                              studentData.stats.nextClass.dayOfWeek
+                            ] || studentData.stats.nextClass.dayOfWeek}{" "}
+                            • {studentData.stats.nextClass.startTime}
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                  );
-                })() : (
+                    );
+                  })()
+                ) : (
                   <div className="space-y-2">
                     <p className="text-lg font-bold">Sin clases programadas</p>
                     <p className="text-xs opacity-70">

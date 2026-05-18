@@ -10,9 +10,14 @@ import { TaskForm } from "./TaskForm";
 interface TaskHeaderProps {
   courseId: number;
   isAdminView?: boolean;
+  hideAddButton?: boolean;
 }
 
-export function TaskHeader({ courseId, isAdminView = false }: TaskHeaderProps) {
+export function TaskHeader({ 
+  courseId, 
+  isAdminView = false,
+  hideAddButton = false 
+}: TaskHeaderProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const activeTab = searchParams.get("tab") || "active";
@@ -39,7 +44,7 @@ export function TaskHeader({ courseId, isAdminView = false }: TaskHeaderProps) {
             </p>
           </div>
           <div className="flex items-center gap-3">
-            {activeTab === "active" && (
+            {activeTab === "active" && !hideAddButton && (
               <button
                 onClick={() => setIsModalOpen(true)}
                 className="inline-flex items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-white hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 ghost-border cursor-pointer"
