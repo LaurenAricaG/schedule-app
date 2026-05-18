@@ -118,6 +118,7 @@ export default function UserCoursesDetail({
                   course={course}
                   onSuccess={() => router.refresh()}
                   isAdmin={isAdmin}
+                  studentId={coursesHref.includes("studentId") ? userId : undefined}
                 />
               ))}
             </div>
